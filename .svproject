@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svproject>
+  <defines/>
+  <includePaths/>
+  <buildPaths/>
+  <pluginPaths/>
+  <libraryPaths/>
+  <argFilePaths>
+    <argFilePath path="${project_loc}/dv/uvmt_st/src/uvmt_st_pkg.flist"/>
+  </argFilePaths>
+  <sourceCollections/>
+  <projectRefs/>
+  <templatePaths/>
+</svproject>
