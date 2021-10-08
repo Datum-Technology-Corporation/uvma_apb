@@ -14,10 +14,9 @@
 
 
 /**
- * Object rebuilt from the AMBA Advanced Peripheral Bus monitor Analog of
- * uvma_apb_base_seq_item_c.
+ * Object rebuilt from the AMBA Advanced Peripheral Bus monitor Analog of uvma_apb_base_seq_item_c.
  */
-class uvma_apb_mon_trn_c extends uvml_trn_mon_trn_c;
+class uvma_apb_mon_trn_c extends uvml_mon_trn_c;
    
    // Data
    uvma_apb_access_type_enum               access_type;

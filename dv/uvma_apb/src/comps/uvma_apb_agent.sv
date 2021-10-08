@@ -17,7 +17,7 @@
  * Top-level component that encapsulates, builds and connects all others.
  * Capable of driving/monitoring AMBA Advanced Peripheral Bus interface.
  */
-class uvma_apb_agent_c extends uvm_agent;
+class uvma_apb_agent_c extends uvml_agent_c;
    
    // Objects
    uvma_apb_cfg_c    cfg;

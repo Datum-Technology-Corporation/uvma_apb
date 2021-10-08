@@ -13,6 +13,7 @@
 -i ${DV_UVMA_APB_SRC_PATH}
 -i ${DV_UVMA_APB_SRC_PATH}/comps
 -i ${DV_UVMA_APB_SRC_PATH}/obj
+-i ${DV_UVMA_APB_SRC_PATH}/reg
 -i ${DV_UVMA_APB_SRC_PATH}/seq
 
 // Files

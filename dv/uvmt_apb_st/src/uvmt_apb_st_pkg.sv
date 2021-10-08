@@ -15,10 +15,9 @@
 
 // Pre-processor macros
 `include "uvm_macros.svh"
-`include "uvml_hrtbt_macros.sv"
+`include "uvml_macros.sv"
 `include "uvml_logs_macros.sv"
 `include "uvml_sb_macros.sv"
-`include "uvml_trn_macros.sv"
 `include "uvma_apb_macros.sv"
 `include "uvme_apb_st_macros.sv"
 `include "uvmt_apb_st_macros.sv"
@@ -32,22 +31,20 @@ timeprecision  1ps;
 
 
 /**
- * Encapsulates all the types and test cases for self-testing the Moore.io
- * Advanced Peripheral Bus (APB) UVM Agent.
+ * Encapsulates all the types and test cases for self-testing the Moore.io Advanced Peripheral Bus (APB) UVM Agent.
  */
 package uvmt_apb_st_pkg;
    
    import uvm_pkg        ::*;
-   import uvml_hrtbt_pkg ::*;
+   import uvml_pkg       ::*;
    import uvml_logs_pkg  ::*;
    import uvml_sb_pkg    ::*;
-   import uvml_trn_pkg   ::*;
    import uvma_apb_pkg   ::*;
    import uvme_apb_st_pkg::*;
    
    // Constants / Structs / Enums
-   `include "uvmt_apb_st_constants.sv"
    `include "uvmt_apb_st_tdefs.sv"
+   `include "uvmt_apb_st_constants.sv"
    
    // Virtual sequence library
    `include "uvmt_apb_st_vseq_lib.sv"

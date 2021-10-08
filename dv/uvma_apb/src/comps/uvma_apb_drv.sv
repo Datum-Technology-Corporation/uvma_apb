@@ -17,7 +17,7 @@
  * Component driving a AMBA Advanced Peripheral Bus virtual interface (uvma_apb_if).
  * @note The req & rsp's roles are switched when this driver is in 'slv' mode.
  */
-class uvma_apb_drv_c extends uvm_driver#(
+class uvma_apb_drv_c extends uvml_drv_c#(
    .REQ(uvma_apb_base_seq_item_c),
    .RSP(uvma_apb_mon_trn_c      )
 );

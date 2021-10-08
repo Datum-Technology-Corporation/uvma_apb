@@ -17,7 +17,7 @@
  * Component sampling transactions from a AMBA Advanced Peripheral Bus virtual interface
  * (uvma_apb_if).
  */
-class uvma_apb_mon_c extends uvm_monitor;
+class uvma_apb_mon_c extends uvml_mon_c;
    
    // Objects
    uvma_apb_cfg_c    cfg;
@@ -309,10 +309,10 @@ task uvma_apb_mon_c::mon_fsm_access(uvma_apb_mon_trn_c trn);
                trn.data[ii] = cntxt.vif.prdata[ii];
             end
          end
-         trn.__has_error = cntxt.vif.pslverr;
+         trn.set_error(cntxt.vif.pslverr);
       end
       else if (cntxt.vif/*.passive_mp*/.mon_cb.penable === 1'b0) begin
-         trn.__has_error = 1;
+         trn.set_error(1);
          `uvm_error("APB_MON", $sformatf("penable deasserted before pready is asserted (transfer aborted):\n%s", trn.sprint()))
          is_finished = 1;
       end
@@ -338,22 +338,22 @@ task uvma_apb_mon_c::check_signals_same(uvma_apb_mon_trn_c trn_a, uvma_apb_mon_t
    
    if (trn_a.access_type !== trn_b.access_type) begin
       `uvm_error("APB_MON", $sformatf("pwrite changed before end of transfer (0->1):\n%s", trn_a.sprint()))
-      trn_a.__has_error = 1;
+      trn_a.set_error(1);
    end
    
    if (trn_a.data !== trn_b.data) begin
       `uvm_error("APB_MON", $sformatf("pwdata changed before end of transfer (%h->&h):\n%s", trn_a.data, trn_b.data, trn_a.sprint()))
-      trn_a.__has_error = 1;
+      trn_a.set_error(1);
    end
    
    if (trn_a.address !== trn_b.address) begin
       `uvm_error("APB_MON", $sformatf("paddr changed before end of transfer (%h->&h):\n%s", trn_a.address, trn_b.address, trn_a.sprint()))
-      trn_a.__has_error = 1;
+      trn_a.set_error(1);
    end
    
    if (trn_a.slv_sel !== trn_b.slv_sel) begin
       `uvm_error("APB_MON", $sformatf("psel changed before end of transfer (%h->&h):\n%s", trn_a.slv_sel, trn_b.slv_sel, trn_a.sprint()))
-      trn_a.__has_error = 1;
+      trn_a.set_error(1);
    end
    
 endtask : check_signals_same
@@ -362,8 +362,8 @@ endtask : check_signals_same
 task uvma_apb_mon_c::sample_trn_from_vif(uvma_apb_mon_trn_c trn);
    
    trn = uvma_apb_mon_trn_c::type_id::create("trn");
-   trn.__originator = this.get_full_name();
-   trn.__timestamp_start = $realtime();
+   trn.set_initiator(this);
+   trn.set_timestamp_start($realtime());
    
    if (cntxt.vif/*.passive_mp*/.pwrite === 1'b1) begin
       trn.access_type = UVMA_APB_ACCESS_WRITE;

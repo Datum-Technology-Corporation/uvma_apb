@@ -17,7 +17,7 @@
  * Object encapsulating all state variables for all AMBA Advanced Peripheral Bus agent
  * (uvma_apb_agent_c) components.
  */
-class uvma_apb_cntxt_c extends uvm_object;
+class uvma_apb_cntxt_c extends uvml_cntxt_c;
    
    // Handle to agent interface
    virtual uvma_apb_if  vif;

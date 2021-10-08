@@ -17,7 +17,7 @@
  * Object encapsulating all parameters for creating, connecting and running all
  * AMBA Advanced Peripheral Bus agent (uvma_apb_agent_c) components.
  */
-class uvma_apb_cfg_c extends uvm_object;
+class uvma_apb_cfg_c extends uvml_cfg_c;
    
    // Generic options
    rand bit                      enabled;
@@ -66,7 +66,7 @@ class uvma_apb_cfg_c extends uvm_object;
       soft mon_slv_list[0] == 1;
    }
    
-   constraint limits_cons {
+   /*constraint limits_cons {
       //unique {mon_slv_list};
       foreach (mon_slv_list[ii]) {
          foreach (mon_slv_list[jj]) {
@@ -75,7 +75,7 @@ class uvma_apb_cfg_c extends uvm_object;
             }
          }
       }
-   }
+   }*/
    
    
    /**

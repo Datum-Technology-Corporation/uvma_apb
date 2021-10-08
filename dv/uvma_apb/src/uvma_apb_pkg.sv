@@ -15,7 +15,8 @@
 
 // Pre-processor macros
 `include "uvm_macros.svh"
-`include "uvml_hrtbt_macros.sv"
+`include "uvml_macros.sv"
+`include "uvml_logs_macros.sv"
 `include "uvma_apb_macros.sv"
 
 // Interfaces / Modules / Checkers
@@ -26,20 +27,18 @@
 
 
 /**
- * Encapsulates all the types needed for an UVM agent capable of driving and/or
- * monitoring AMBA Advanced Peripheral Bus.
+ * Encapsulates all the types needed for an UVM agent capable of driving and/or monitoring AMBA Advanced Peripheral Bus.
  */
 package uvma_apb_pkg;
    
-   import uvm_pkg       ::*;
-   import uvml_hrtbt_pkg::*;
-   import uvml_trn_pkg  ::*;
-   import uvml_logs_pkg ::*;
-   import uvml_ral_pkg  ::*;
+   import uvm_pkg      ::*;
+   import uvml_pkg     ::*;
+   import uvml_logs_pkg::*;
+   import uvml_ral_pkg ::*;
    
    // Constants / Structs / Enums
-   `include "uvma_apb_constants.sv"
    `include "uvma_apb_tdefs.sv"
+   `include "uvma_apb_constants.sv"
    
    // Objects
    `include "uvma_apb_cfg.sv"

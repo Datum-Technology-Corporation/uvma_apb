@@ -16,7 +16,7 @@
 /**
  * Object created by AMBA Advanced Peripheral Bus agent sequences extending uvma_apb_seq_base_c.
  */
-class uvma_apb_base_seq_item_c extends uvml_trn_seq_item_c;
+class uvma_apb_base_seq_item_c extends uvml_seq_item_c;
    
    // Metadata
    uvma_apb_mode_enum  mode;

@@ -155,11 +155,6 @@ class uvmt_apb_st_base_test_c extends uvm_test;
     */
    extern task start_clk();
    
-   /**
-    * Fatals out after simulation_timeout has elapsed.
-    */
-   extern task simulation_timeout();
-   
 endclass : uvmt_apb_st_base_test_c
 
 
@@ -204,7 +199,6 @@ task uvmt_apb_st_base_test_c::run_phase(uvm_phase phase);
    super.run_phase(phase);
    
    start_clk();
-   simulation_timeout();
    
 endtask : run_phase
 
@@ -278,10 +272,9 @@ endfunction : randomize_test
 
 function void uvmt_apb_st_base_test_c::cfg_hrtbt_monitor();
    
-   //`uvml_hrtbt_set_cfg(startup_timeout , test_cfg.startup_timeout )
-   //`uvml_hrtbt_set_cfg(heartbeat_period, test_cfg.heartbeat_period)
-   uvml_default_hrtbt.startup_timeout  = test_cfg.startup_timeout ;
-   uvml_default_hrtbt.heartbeat_period = test_cfg.heartbeat_period;
+   `uvml_hrtbt_set_cfg(startup_timeout , test_cfg.startup_timeout )
+   `uvml_hrtbt_set_cfg(heartbeat_period, test_cfg.heartbeat_period)
+   `uvml_watchdog_set_cfg(timeout, test_cfg.simulation_timeout)
    
 endfunction : cfg_hrtbt_monitor
 
@@ -337,18 +330,6 @@ task uvmt_apb_st_base_test_c::start_clk();
    clknrst_gen_vif.start_clk();
    
 endtask : start_clk
-
-
-task uvmt_apb_st_base_test_c::simulation_timeout();
-   
-   fork
-      begin
-         #(test_cfg.simulation_timeout * 1ns);
-         `uvm_fatal("TIMEOUT", $sformatf("Global timeout after %0dns. Heartbeat list:\n%s", test_cfg.simulation_timeout, uvml_default_hrtbt.print_comp_names()))
-      end
-   join_none
-   
-endtask : simulation_timeout
 
 
 `endif // __UVMT_APB_ST_BASE_TEST_SV__

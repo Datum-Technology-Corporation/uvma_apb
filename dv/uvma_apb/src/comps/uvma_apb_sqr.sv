@@ -17,7 +17,7 @@
  * Component running AMBA Advanced Peripheral Bus sequences extending uvma_apb_base_seq_c.
  * Provides sequence items for uvma_apb_drv_c.
  */
-class uvma_apb_sqr_c extends uvm_sequencer#(
+class uvma_apb_sqr_c extends uvml_sqr_c#(
    .REQ(uvma_apb_base_seq_item_c),
    .RSP(uvma_apb_mon_trn_c      )
 );

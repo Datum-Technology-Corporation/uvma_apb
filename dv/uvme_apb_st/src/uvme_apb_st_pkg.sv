@@ -15,12 +15,12 @@
 
 // Pre-processor macros
 `include "uvm_macros.svh"
-`include "uvml_hrtbt_macros.sv"
+`include "uvml_macros.sv"
 `include "uvml_logs_macros.sv"
-`include "uvml_trn_macros.sv"
 `include "uvml_sb_macros.sv"
 `include "uvma_apb_macros.sv"
 `include "uvme_apb_st_macros.sv"
+
 
 // Interface(s) / Module(s) / Checker(s)
 `ifdef UVME_APB_ST_INC_CHKR
@@ -29,21 +29,20 @@
 
 
  /**
- * Encapsulates all the types needed for the Moore.io UVM environment capable of
- * self-testing the Moore.io Advanced Peripheral Bus (APB) UVM Agent.
+ * Encapsulates all the types needed for the Moore.io UVM environment capable of self-testing the Moore.io Advanced
+ * Peripheral Bus (APB) UVM Agent.
  */
 package uvme_apb_st_pkg;
    
-   import uvm_pkg       ::*;
-   import uvml_hrtbt_pkg::*;
-   import uvml_logs_pkg ::*;
-   import uvml_trn_pkg  ::*;
-   import uvml_sb_pkg   ::*;
-   import uvma_apb_pkg::*;
+   import uvm_pkg      ::*;
+   import uvml_pkg     ::*;
+   import uvml_logs_pkg::*;
+   import uvml_sb_pkg  ::*;
+   import uvma_apb_pkg ::*;
    
    // Constants / Structs / Enums
-   `include "uvme_apb_st_constants.sv"
    `include "uvme_apb_st_tdefs.sv"
+   `include "uvme_apb_st_constants.sv"
    
    // Objects
    `include "uvme_apb_st_cfg.sv"
