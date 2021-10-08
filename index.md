@@ -4,7 +4,7 @@ The Moore.io UVM APB Agent is a compact, sequence-based solution to Driving/Moni
 # IP
 * [Download latest release (.tgz)](Todo)
 * [View latest documentation](Todo)
-* [Browse code](https://github.com/Datum-Technology-Corporation/uvma_apb)
+* [Browse code](https://github.com/Datum-Technology-Corporation/uvma_apb/tree/main/dv/uvma_apb/src)
 
 # Metrics
 ## Stability
