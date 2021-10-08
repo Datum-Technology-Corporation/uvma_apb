@@ -1,5 +1,5 @@
 # About
-The Moore.io UVM APB Agent is a compact, sequence-based solution to Driving/Monitoring both sides of the interface.
+The Moore.io UVM APB Agent is a compact, sequence-based solution to Driving/Monitoring both sides of the interface.  This project consists of the agent (`uvma_apb_pkg`), the self-testing UVM environment (`uvme_apb_st_pkg`) and the test bench (`uvmt_apb_st_pkg`) to verify the agent against itself.
 
 # IP
 * [Download latest release (.tgz)](Todo)
