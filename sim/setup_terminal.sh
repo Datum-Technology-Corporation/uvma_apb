@@ -28,7 +28,7 @@ export PROJECT_TOOLS_IMPORT_DIR=${PROJECT_TOOLS_DIR}/.imports
 # Local
 # Imports
 export TOOLS_DVM_SRC_PATH=${PROJECT_TOOLS_IMPORT_DIR}/dvm/src
-alias dvm="python ${TOOLS_DVM_SRC_PATH}/dvm.py"
+alias dvm="${TOOLS_DVM_SRC_PATH}/dvm.py"
 
 
 ### RTL ###
