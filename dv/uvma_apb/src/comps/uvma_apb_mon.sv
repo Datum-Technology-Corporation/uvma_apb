@@ -20,6 +20,8 @@
  */
 class uvma_apb_mon_c extends uvml_mon_c;
    
+   //virtual uvma_apb_if.passive_mp  mp; ///< 
+   
    // Objects
    uvma_apb_cfg_c    cfg;
    uvma_apb_cntxt_c  cntxt;
@@ -137,6 +139,8 @@ function void uvma_apb_mon_c::build_phase(uvm_phase phase);
       `uvm_fatal("CNTXT", "Context handle is null")
    end
    
+   //mp = cntxt.vif.passive_mp;
+   
    ap         = new("ap"        , this);
    drv_rsp_ap = new("drv_rsp_ap", this);
   
@@ -147,30 +151,21 @@ task uvma_apb_mon_c::run_phase(uvm_phase phase);
    
    super.run_phase(phase);
    
-   fork
-      observe_reset();
-      
-      begin
-         forever begin
-            wait (cfg.enabled);
-            
-            fork
-               begin
-                  case (cntxt.reset_state)
-                     UVMA_APB_RESET_STATE_PRE_RESET : mon_pre_reset (phase);
-                     UVMA_APB_RESET_STATE_IN_RESET  : mon_in_reset  (phase);
-                     UVMA_APB_RESET_STATE_POST_RESET: mon_post_reset(phase);
-                  endcase
-               end
-               
-               begin
-                  wait (!cfg.enabled);
-               end
-            join_any
-            disable fork;
+   if (cfg.enabled) begin
+      fork
+         observe_reset();
+         
+         begin
+            forever begin
+               case (cntxt.reset_state)
+                  UVMA_APB_RESET_STATE_PRE_RESET : mon_pre_reset (phase);
+                  UVMA_APB_RESET_STATE_IN_RESET  : mon_in_reset  (phase);
+                  UVMA_APB_RESET_STATE_POST_RESET: mon_post_reset(phase);
+               endcase
+            end
          end
-      end
-   join_none
+      join_none
+   end
    
 endtask : run_phase
 
@@ -178,21 +173,10 @@ endtask : run_phase
 task uvma_apb_mon_c::observe_reset();
    
    forever begin
-      wait (cfg.enabled);
-      
-      fork
-         begin
-            wait (cntxt.vif.reset_n === 0);
-            cntxt.reset_state = UVMA_APB_RESET_STATE_IN_RESET;
-            wait (cntxt.vif.reset_n === 1);
-            cntxt.reset_state = UVMA_APB_RESET_STATE_POST_RESET;
-         end
-         
-         begin
-            wait (!cfg.enabled);
-         end
-      join_any
-      disable fork;
+      wait (cntxt.vif.reset_n === 0);
+      cntxt.reset_state = UVMA_APB_RESET_STATE_IN_RESET;
+      wait (cntxt.vif.reset_n === 1);
+      cntxt.reset_state = UVMA_APB_RESET_STATE_POST_RESET;
    end
    
 endtask : observe_reset
@@ -200,14 +184,14 @@ endtask : observe_reset
 
 task uvma_apb_mon_c::mon_pre_reset(uvm_phase phase);
    
-   @(cntxt.vif/*.passive_mp*/.mon_cb);
+   @(cntxt.vif.mon_cb); //@(mp.mon_cb);
    
 endtask : mon_pre_reset
 
 
 task uvma_apb_mon_c::mon_in_reset(uvm_phase phase);
    
-   @(cntxt.vif/*.passive_mp*/.mon_cb);
+   @(cntxt.vif.mon_cb); //@(mp.mon_cb);
    
 endtask : mon_in_reset
 
@@ -253,8 +237,8 @@ task uvma_apb_mon_c::mon_fsm_inactive(uvma_apb_mon_trn_c trn);
    bit                                 is_active = 0;
    
    do begin
-      @(cntxt.vif/*.passive_mp*/.mon_cb);
-      psel = cntxt.vif/*.passive_mp*/.mon_cb.psel;
+      @(cntxt.vif.mon_cb); //@(mp.mon_cb);
+      psel = cntxt.vif.mon_cb.psel; //psel = mp.mon_cb.psel;
       for (int ii=(`UVMA_APB_PSEL_MAX_SIZE-1); ii>=cfg.sel_width; ii--) begin
          psel[ii] = 0;
       end
@@ -284,10 +268,10 @@ task uvma_apb_mon_c::mon_fsm_setup(uvma_apb_mon_trn_c trn);
    end
    
    do begin
-      @(cntxt.vif/*.passive_mp*/.mon_cb);
+      @(cntxt.vif.mon_cb); //@(mp.mon_cb);
       sample_trn_from_vif(_trn);
       check_signals_same(trn, _trn);
-      if (cntxt.vif/*.passive_mp*/.mon_cb.penable === 1'b1) begin
+      if (cntxt.vif.mon_cb.penable === 1'b1) begin //if (mp.mon_cb.penable === 1'b1) begin
          is_enabled = 1;
          cntxt.mon_phase = UVMA_APB_PHASE_ACCESS;
       end
@@ -302,7 +286,7 @@ task uvma_apb_mon_c::mon_fsm_access(uvma_apb_mon_trn_c trn);
    bit                 is_finished = 0;
    
    do begin
-      if ((cntxt.vif/*.passive_mp*/.mon_cb.penable === 1'b1) && (cntxt.vif/*.passive_mp*/.mon_cb.pready === 1'b1)) begin
+      if ((cntxt.vif.mon_cb.penable === 1'b1) && (cntxt.vif.mon_cb.pready === 1'b1)) begin //if ((mp.mon_cb.penable === 1'b1) && (mp.mon_cb.pready === 1'b1)) begin
          is_finished = 1;
          cntxt.mon_phase = UVMA_APB_PHASE_INACTIVE;
          if (trn.access_type == UVMA_APB_ACCESS_READ) begin
@@ -312,13 +296,13 @@ task uvma_apb_mon_c::mon_fsm_access(uvma_apb_mon_trn_c trn);
          end
          trn.set_error(cntxt.vif.pslverr);
       end
-      else if (cntxt.vif/*.passive_mp*/.mon_cb.penable === 1'b0) begin
+      else if (cntxt.vif.mon_cb.penable === 1'b0) begin//else if (mp.mon_cb.penable === 1'b0) begin
          trn.set_error(1);
          `uvm_error("APB_MON", $sformatf("penable deasserted before pready is asserted (transfer aborted):\n%s", trn.sprint()))
          is_finished = 1;
       end
       
-      @(cntxt.vif/*.passive_mp*/.mon_cb);
+      @(cntxt.vif.mon_cb); //@(mp.mon_cb);
       sample_trn_from_vif(_trn);
       check_signals_same(trn, _trn);
       trn.latency++;
@@ -366,24 +350,25 @@ task uvma_apb_mon_c::sample_trn_from_vif(uvma_apb_mon_trn_c trn);
    trn.set_initiator(this);
    trn.set_timestamp_start($realtime());
    
-   if (cntxt.vif/*.passive_mp*/.pwrite === 1'b1) begin
+   if (cntxt.vif.mon_cb.pwrite === 1'b1) begin //if (mp.mon_cb.pwrite === 1'b1) begin
       trn.access_type = UVMA_APB_ACCESS_WRITE;
       for (int unsigned ii=0; ii<cfg.data_bus_width; ii++) begin
-         trn.data[ii] = cntxt.vif/*.passive_mp*/.pwdata[ii];
+         trn.data[ii] = cntxt.vif.mon_cb.pwdata[ii]; //trn.data[ii] = mp.mon_cb.pwdata[ii];
       end
    end
-   else if (cntxt.vif/*.passive_mp*/.pwrite === 1'b0) begin
+   else if (cntxt.vif.mon_cb.pwrite === 1'b0) begin //else if (mp.mon_cb.pwrite === 1'b0) begin
       trn.access_type = UVMA_APB_ACCESS_READ;
    end
    else begin
-      `uvm_error("APB_MON", $sformatf("Invalid pwrite value: %h", cntxt.vif/*.passive_mp*/.pwrite))
+      `uvm_error("APB_MON", $sformatf("Invalid pwrite value: %h", cntxt.vif.mon_cb.pwrite))
+      //`uvm_error("APB_MON", $sformatf("Invalid pwrite value: %h", mp.mon_cb.pwrite))
    end
    
    for (int unsigned ii=0; ii<cfg.addr_bus_width; ii++) begin
-      trn.address[ii] = cntxt.vif/*.passive_mp*/.paddr[ii];
+      trn.address[ii] = cntxt.vif.mon_cb.paddr[ii]; //trn.address[ii] = mp.mon_cb.paddr[ii];
    end
    for (int unsigned ii=0; ii<cfg.sel_width; ii++) begin
-      trn.slv_sel[ii] = cntxt.vif/*.passive_mp*/.psel[ii];
+      trn.slv_sel[ii] = cntxt.vif.mon_cb.psel[ii]; //trn.slv_sel[ii] = mp.mon_cb.psel[ii];
    end
    
 endtask : sample_trn_from_vif

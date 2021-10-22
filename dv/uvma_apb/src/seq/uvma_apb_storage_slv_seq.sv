@@ -25,7 +25,7 @@ class uvma_apb_storage_slv_seq_c extends uvma_apb_slv_base_seq_c;
    
    
    `uvm_object_utils_begin(uvma_apb_storage_slv_seq_c)
-      `uvm_field_aa_int_int_unsigned(mem, UVM_DEFAULT)
+      //`uvm_field_aa_int_int_unsigned(mem, UVM_DEFAULT)
    `uvm_object_utils_end
    
    
@@ -63,22 +63,22 @@ task uvma_apb_storage_slv_seq_c::body();
       case (rsp.access_type)
          UVMA_APB_ACCESS_READ: begin
             if (mem.exists(addr)) begin
-               `uvm_do_with(_req, {
-                  foreach (rdata[ii]) {
-                     if (ii < cfg.data_bus_width) {
-                        rdata[ii] == mem[addr][ii];
-                     }
-                  }
-               })
+               `uvm_create(_req)
+               foreach (_req.rdata[ii]) begin
+                  if (ii < cfg.data_bus_width) begin
+                     _req.rdata[ii] = mem[addr][ii];
+                  end
+               end
+               `uvm_send(_req)
             end
             else begin
-               `uvm_do_with(_req, {
-                  foreach (rdata[ii]) {
-                     if (ii < cfg.data_bus_width) {
-                        rdata[ii] == 1'b0;
-                     }
-                  }
-               })
+               `uvm_create(_req)
+               foreach (_req.rdata[ii]) begin
+                  if (ii < cfg.data_bus_width) begin
+                     _req.rdata[ii] = 0;
+                  end
+               end
+               `uvm_send(_req)
             end
          end
          

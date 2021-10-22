@@ -41,7 +41,7 @@ class uvme_apb_st_cov_model_c extends uvm_component;
    `uvm_component_utils_end
    
    
-   covergroup apb_st_cfg_cg;
+   /*covergroup apb_st_cfg_cg;
       // TODO Implement apb_st_cfg_cg
       //      Ex: abc_cpt : coverpoint cfg.abc;
       //          xyz_cpt : coverpoint cfg.xyz;
@@ -75,7 +75,7 @@ class uvme_apb_st_cov_model_c extends uvm_component;
       // TODO Implement apb_st_slv_mon_trn_cg
       //      Ex: abc_cpt : coverpoint mon_trn.abc;
       //          xyz_cpt : coverpoint mon_trn.xyz;
-   endgroup : apb_st_slv_mon_trn_cg
+   endgroup : apb_st_slv_mon_trn_cg*/
    
    
    /**
@@ -203,42 +203,42 @@ endtask : run_phase
 
 function void uvme_apb_st_cov_model_c::sample_cfg();
    
-  apb_st_cfg_cg.sample();
+  //apb_st_cfg_cg.sample();
    
 endfunction : sample_cfg
 
 
 function void uvme_apb_st_cov_model_c::sample_cntxt();
    
-   apb_st_cntxt_cg.sample();
+   //apb_st_cntxt_cg.sample();
    
 endfunction : sample_cntxt
 
 
 function void uvme_apb_st_cov_model_c::sample_mstr_seq_item();
    
-   apb_st_mstr_seq_item_cg.sample();
+   //apb_st_mstr_seq_item_cg.sample();
    
 endfunction : sample_mstr_seq_item
 
 
 function void uvme_apb_st_cov_model_c::sample_slv_seq_item();
    
-   apb_st_slv_seq_item_cg.sample();
+   //apb_st_slv_seq_item_cg.sample();
    
 endfunction : sample_slv_seq_item
 
 
 function void uvme_apb_st_cov_model_c::sample_mstr_mon_trn();
    
-   apb_st_mstr_mon_trn_cg.sample();
+   //apb_st_mstr_mon_trn_cg.sample();
    
 endfunction : sample_mstr_mon_trn
 
 
 function void uvme_apb_st_cov_model_c::sample_slv_mon_trn();
    
-   apb_st_slv_mon_trn_cg.sample();
+   //apb_st_slv_mon_trn_cg.sample();
    
 endfunction : sample_slv_mon_trn
 

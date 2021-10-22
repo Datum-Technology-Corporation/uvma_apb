@@ -31,7 +31,7 @@ class uvme_apb_st_cfg_c extends uvm_object;
    // Objects
    rand uvma_apb_cfg_c  mstr_cfg;
    rand uvma_apb_cfg_c  slv_cfg;
-   rand uvml_sb_cfg_c   sb_cfg;
+   rand uvml_sb_simplex_cfg_c   sb_cfg;
    
    
    `uvm_object_utils_begin(uvme_apb_st_cfg_c)
@@ -121,7 +121,7 @@ function uvme_apb_st_cfg_c::new(string name="uvme_apb_st_cfg");
    
    mstr_cfg = uvma_apb_cfg_c::type_id::create("mstr_cfg");
    slv_cfg  = uvma_apb_cfg_c::type_id::create("slv_cfg" );
-   sb_cfg   = uvml_sb_cfg_c ::type_id::create("sb_cfg"  );
+   sb_cfg   = uvml_sb_simplex_cfg_c ::type_id::create("sb_cfg"  );
    
 endfunction : new
 

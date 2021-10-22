@@ -64,7 +64,9 @@ endpackage : uvmt_apb_st_pkg
 
 // Module(s) / Checker(s)
 `include "uvmt_apb_st_dut_wrap.sv"
+`ifdef UVMT_APB_ST_INC_CHKR
 `include "uvmt_apb_st_dut_chkr.sv"
+`endif
 `include "uvmt_apb_st_tb.sv"
 
 

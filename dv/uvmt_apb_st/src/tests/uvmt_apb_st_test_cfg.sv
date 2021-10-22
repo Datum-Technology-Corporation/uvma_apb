@@ -15,8 +15,7 @@
 
 
 /**
- * Object encapsulating configuration parameters common to most if not all tests
- * extending from uvmt_apb_st_base_test_c.
+ * Object encapsulating configuration parameters common to most if not all tests extending from uvmt_apb_st_base_test_c.
  */
 class uvmt_apb_st_test_cfg_c extends uvm_object;
    
@@ -44,11 +43,11 @@ class uvmt_apb_st_test_cfg_c extends uvm_object;
    
    
    constraint defaults_cons {
-      soft clk_period         == uvmt_apb_st_default_clk_period        ;
-      soft reset_period       == uvmt_apb_st_default_reset_period      ;
-      soft startup_timeout    == uvmt_apb_st_default_startup_timeout   ;
-      soft heartbeat_period   == uvmt_apb_st_default_heartbeat_period  ;
-      soft simulation_timeout == uvmt_apb_st_default_simulation_timeout;
+      /*soft*/ clk_period         == uvmt_apb_st_default_clk_period        ;
+      /*soft*/ reset_period       == uvmt_apb_st_default_reset_period      ;
+      /*soft*/ startup_timeout    == uvmt_apb_st_default_startup_timeout   ;
+      /*soft*/ heartbeat_period   == uvmt_apb_st_default_heartbeat_period  ;
+      /*soft*/ simulation_timeout == uvmt_apb_st_default_simulation_timeout;
    }
    
    

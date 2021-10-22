@@ -12,34 +12,34 @@ Apache License (thus ignoring all sections written below entirely).
 
 1. Terminology in the Apache License is supplemented or modified as follows:
 
-- "Authorship": any reference to �authorship� shall be taken to read "authorship
+> - "Authorship": any reference to 'authorship' shall be taken to read "authorship
   or design".
 
-- "Copyright owner": any reference to �copyright owner� shall be taken to read
+> - "Copyright owner": any reference to 'copyright owner' shall be taken to read
   "Rights owner".
 
-- "Copyright statement": the reference to �copyright statement� shall be taken
-  to read �copyright or other statement pertaining to Rights�.
+> - "Copyright statement": the reference to 'copyright statement' shall be taken
+  to read "copyright or other statement pertaining to Rights".
 
-- The following new definition shall be added to the Definitions section of the
+> - The following new definition shall be added to the Definitions section of the
   Apache License:
 
-- "Rights" means copyright and any similar right including design right (whether
+> - "Rights" means copyright and any similar right including design right (whether
   registered or unregistered), rights in semiconductor topographies (mask works)
   and database rights (but excluding Patents and Trademarks).
 
-- The following definitions shall replace the corresponding definitions in the
+> - The following definitions shall replace the corresponding definitions in the
   Apache License:
 
-- "License" shall mean this Solderpad Hardware License version 2.1, being the
+> - "License" shall mean this Solderpad Hardware License version 2.1, being the
   terms and conditions for use, manufacture, instantiation, adaptation,
   reproduction, and distribution as defined by Sections 1 through 9 of this
   document.
 
-- "Licensor" shall mean the owner of the Rights or entity authorized by the
+> - "Licensor" shall mean the owner of the Rights or entity authorized by the
   owner of the Rights that is granting the License.
 
-- "Derivative Works" shall mean any work, whether in Source or Object form, that
+> - "Derivative Works" shall mean any work, whether in Source or Object form, that
   is based on (or derived from) the Work and for which the editorial revisions,
   annotations, elaborations, or other modifications represent, as a whole, an
   original work of authorship or design. For the purposes of this License,
@@ -47,7 +47,7 @@ Apache License (thus ignoring all sections written below entirely).
   from, or merely link (or bind by name) or physically connect to or
   interoperate with the Work and Derivative Works thereof.
 
-- "Object" form shall mean any form resulting from mechanical transformation or
+> - "Object" form shall mean any form resulting from mechanical transformation or
   translation of a Source form or the application of a Source form to physical
   material, including but not limited to compiled object code, generated
   documentation, the instantiation of a hardware design or physical object or
@@ -55,11 +55,11 @@ Apache License (thus ignoring all sections written below entirely).
   such as bytecodes, FPGA bitstreams, moulds, artwork and semiconductor
   topographies (mask works).
 
-- "Source" form shall mean the preferred form for making modifications,
+> - "Source" form shall mean the preferred form for making modifications,
   including but not limited to source code, net lists, board layouts, CAD files,
   documentation source, and configuration files.
 
-- "Work" shall mean the work of authorship or design, whether in Source or
+> - "Work" shall mean the work of authorship or design, whether in Source or
   Object form, made available under the License, as indicated by a notice
   relating to Rights that is included in or attached to the work (an example is
   provided in the Appendix below).

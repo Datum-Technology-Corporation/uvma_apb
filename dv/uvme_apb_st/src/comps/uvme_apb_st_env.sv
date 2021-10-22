@@ -182,20 +182,20 @@ endfunction: connect_phase
 
 function void uvme_apb_st_env_c::assign_cfg();
    
-   uvm_config_db#(uvme_apb_st_cfg_c)::set(this, "*"         , "cfg", cfg         );
-   uvm_config_db#(uvma_apb_cfg_c   )::set(this, "mstr_agent", "cfg", cfg.mstr_cfg);
-   uvm_config_db#(uvma_apb_cfg_c   )::set(this, "slv_agent" , "cfg", cfg.slv_cfg );
-   uvm_config_db#(uvml_sb_cfg_c    )::set(this, "sb"        , "cfg", cfg.sb_cfg  );
+   uvm_config_db#(uvme_apb_st_cfg_c    )::set(this, "*"         , "cfg", cfg         );
+   uvm_config_db#(uvma_apb_cfg_c       )::set(this, "mstr_agent", "cfg", cfg.mstr_cfg);
+   uvm_config_db#(uvma_apb_cfg_c       )::set(this, "slv_agent" , "cfg", cfg.slv_cfg );
+   uvm_config_db#(uvml_sb_simplex_cfg_c)::set(this, "sb"        , "cfg", cfg.sb_cfg  );
    
 endfunction: assign_cfg
 
 
 function void uvme_apb_st_env_c::assign_cntxt();
    
-   uvm_config_db#(uvme_apb_st_cntxt_c)::set(this, "*"         , "cntxt", cntxt           );
-   uvm_config_db#(uvma_apb_cntxt_c   )::set(this, "mstr_agent", "cntxt", cntxt.mstr_cntxt);
-   uvm_config_db#(uvma_apb_cntxt_c   )::set(this, "slv_agent" , "cntxt", cntxt.slv_cntxt );
-   uvm_config_db#(uvml_sb_cntxt_c    )::set(this, "sb"        , "cntxt", cntxt.sb_cntxt  );
+   uvm_config_db#(uvme_apb_st_cntxt_c    )::set(this, "*"         , "cntxt", cntxt           );
+   uvm_config_db#(uvma_apb_cntxt_c       )::set(this, "mstr_agent", "cntxt", cntxt.mstr_cntxt);
+   uvm_config_db#(uvma_apb_cntxt_c       )::set(this, "slv_agent" , "cntxt", cntxt.slv_cntxt );
+   uvm_config_db#(uvml_sb_simplex_cntxt_c)::set(this, "sb"        , "cntxt", cntxt.sb_cntxt  );
    
 endfunction: assign_cntxt
 
