@@ -48,5 +48,5 @@ dvm --help
 > To run test 'all_access' with seed '1' and wave capture enabled:
 
 ```
-clear && dvm all uvmt_apb_st -t all_access -s 1 -w
+dvm all uvmt_apb_st -t all_access -s 1 -w
 ```
