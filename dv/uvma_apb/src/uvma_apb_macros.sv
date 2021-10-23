@@ -16,7 +16,7 @@
 
 `define UVMA_APB_PADDR_MAX_SIZE   32
 `define UVMA_APB_DATA_MAX_SIZE    32
-`define UVMA_APB_PSEL_MAX_SIZE   256
+`define UVMA_APB_PSEL_MAX_SIZE    1
 
 
 `endif // __UVMA_APB_MACROS_SV__

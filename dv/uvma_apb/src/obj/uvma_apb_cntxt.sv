@@ -26,6 +26,7 @@ class uvma_apb_cntxt_c extends uvml_cntxt_c;
    // Integrals
    uvma_apb_reset_state_enum  reset_state = UVMA_APB_RESET_STATE_PRE_RESET;
    uvma_apb_phases_enum       mon_phase   = UVMA_APB_PHASE_INACTIVE;
+   int                        slv         = -1;
    
    // Events
    uvm_event  sample_cfg_e;
@@ -33,8 +34,9 @@ class uvma_apb_cntxt_c extends uvml_cntxt_c;
    
    
    `uvm_object_utils_begin(uvma_apb_cntxt_c)
-      `uvm_field_enum(uvma_apb_reset_state_enum, reset_state, UVM_DEFAULT)
-      `uvm_field_enum(uvma_apb_phases_enum     , mon_phase  , UVM_DEFAULT)
+      `uvm_field_enum(uvma_apb_reset_state_enum, reset_state, UVM_DEFAULT          )
+      `uvm_field_enum(uvma_apb_phases_enum     , mon_phase  , UVM_DEFAULT          )
+      `uvm_field_int (                           slv        , UVM_DEFAULT + UVM_DEC)
       
       `uvm_field_event(sample_cfg_e  , UVM_DEFAULT)
       `uvm_field_event(sample_cntxt_e, UVM_DEFAULT)
@@ -67,6 +69,7 @@ endfunction : new
 function void uvma_apb_cntxt_c::reset();
    
    mon_phase = UVMA_APB_PHASE_INACTIVE;
+   slv       = -1;
    
 endfunction : reset
 

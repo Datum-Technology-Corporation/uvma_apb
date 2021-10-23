@@ -48,7 +48,7 @@ module uvmt_apb_st_tb;
       uvm_config_db#(virtual uvma_apb_if               )::set(null, "*.env.slv_agent" , "vif"            , slv_if        );
       
       // Run test
-      uvm_top.enable_print_topology = 1;
+      uvm_top.enable_print_topology = 0;
       uvm_top.finish_on_completion  = 1;
       uvm_top.run_test();
    end

@@ -40,8 +40,14 @@ class uvma_apb_mon_trn_logger_c extends uvml_logs_mon_trn_logger_c#(
     */
    virtual function void write(uvma_apb_mon_trn_c t);
       
-      // TODO Implement uvma_apb_mon_trn_logger_c::write()
-      // Ex: fwrite($sformatf(" %t | %08h | %02b | %04d | %02h |", $realtime(), t.a, t.b, t.c, t.d));
+      string access_type = "";
+      string data;
+      
+      case (t.access_type)
+         UVMA_APB_ACCESS_READ : access_type = "READ ";
+         UVMA_APB_ACCESS_WRITE: access_type = "WRITE";
+      endcase
+      fwrite($sformatf(" %t | %s | %h | %b | %b | %h |", $realtime(), access_type, t.address, t.slv_sel, t.slv_err, t.data));
       
    endfunction : write
    
@@ -50,60 +56,13 @@ class uvma_apb_mon_trn_logger_c extends uvml_logs_mon_trn_logger_c#(
     */
    virtual function void print_header();
       
-      // TODO Implement uvma_apb_mon_trn_logger_c::print_header()
-      // Ex: fwrite("----------------------------------------------");
-      //     fwrite(" TIME | FIELD A | FIELD B | FIELD C | FIELD D ");
-      //     fwrite("----------------------------------------------");
+      fwrite("---------------------------------------------------");
+      fwrite("     TIME     |  ACC  | ADDRESS | SLV_SEL | SLV_ERR | DATA ");
+      fwrite("---------------------------------------------------");
       
    endfunction : print_header
    
 endclass : uvma_apb_mon_trn_logger_c
-
-
-/**
- * Component writing APB monitor transactions debug data to disk as JavaScript Object Notation (JSON).
- */
-class uvma_apb_mon_trn_logger_json_c extends uvma_apb_mon_trn_logger_c;
-   
-   `uvm_component_utils(uvma_apb_mon_trn_logger_json_c)
-   
-   
-   /**
-    * Set file extension to '.json'.
-    */
-   function new(string name="uvma_apb_mon_trn_logger_json", uvm_component parent=null);
-      
-      super.new(name, parent);
-      fextension = "json";
-      
-   endfunction : new
-   
-   /**
-    * Writes contents of t to disk.
-    */
-   virtual function void write(uvma_apb_mon_trn_c t);
-      
-      // TODO Implement uvma_apb_mon_trn_logger_json_c::write()
-      // Ex: fwrite({"{",
-      //       $sformatf("\"time\":\"%0t\",", $realtime()),
-      //       $sformatf("\"a\":%h,"        , t.a        ),
-      //       $sformatf("\"b\":%b,"        , t.b        ),
-      //       $sformatf("\"c\":%d,"        , t.c        ),
-      //       $sformatf("\"d\":%h,"        , t.c        ),
-      //     "},"});
-      
-   endfunction : write
-   
-   /**
-    * Empty function.
-    */
-   virtual function void print_header();
-      
-      // Do nothing: JSON files do not use headers.
-      
-   endfunction : print_header
-   
-endclass : uvma_apb_mon_trn_logger_json_c
 
 
 `endif // __UVMA_APB_MON_TRN_LOGGER_SV__

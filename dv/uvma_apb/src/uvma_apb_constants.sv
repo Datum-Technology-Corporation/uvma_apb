@@ -14,9 +14,9 @@
 `define __UVMA_APB_CONSTANTS_SV__
 
 
-const int unsigned  uvma_apb_default_paddr_width = 4; // Measured in bytes (B)
-const int unsigned  uvma_apb_default_data_width  = 4; // Measured in bytes (B)
-const int unsigned  uvma_apb_default_psel_width  = 1; // Measured in bits  (b)
+const int unsigned  uvma_apb_default_paddr_width = 32; // Measured in bits (b)
+const int unsigned  uvma_apb_default_data_width  = 32; // Measured in bits (b)
+const int unsigned  uvma_apb_default_psel_width  =  1; // Measured in bits (b)
 
 
 `endif // __UVMA_APB_CONSTANTS_SV__

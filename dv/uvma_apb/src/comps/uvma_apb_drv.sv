@@ -18,9 +18,8 @@
  * Component driving a AMBA Advanced Peripheral Bus virtual interface (uvma_apb_if).
  * @note The req & rsp's roles are switched when this driver is in 'slv' mode.
  */
-class uvma_apb_drv_c extends uvml_drv_c#(
-   .REQ(uvma_apb_base_seq_item_c),
-   .RSP(uvma_apb_mon_trn_c      )
+class uvma_apb_drv_c extends uvml_drv_c #(
+   .REQ(uvma_apb_base_seq_item_c)
 );
    
    //virtual uvma_apb_if.active_mstr_mp  mstr_mp; ///< 
@@ -206,35 +205,23 @@ task uvma_apb_drv_c::drv_post_reset();
    
    case (cfg.drv_mode)
       UVMA_APB_MODE_MSTR: begin
-         // 1. Get next req from sequence and drive it on the vif
          get_next_req(req);
          if (!$cast(mstr_req, req)) begin
             `uvm_fatal("APB_DRV", $sformatf("Could not cast 'req' (%s) to 'mstr_req' (%s)", $typename(req), $typename(mstr_req)))
          end
          drv_mstr_req(mstr_req);
          
-         // 2. Wait for the monitor to send us the slv's rsp with the results of the req
-         wait_for_rsp(slv_rsp );
-         process_mstr_rsp(mstr_req, slv_rsp);
-         
-         // 3. Send out to TLM and tell sequencer we're ready for the next sequence item
          mstr_ap.write(mstr_req);
          seq_item_port.item_done();
       end
       
       UVMA_APB_MODE_SLV: begin
-         // 1. Wait for the monitor to send us the mstr's "rsp" with an access request
-         wait_for_rsp(mstr_rsp);
-         seq_item_port.put_response(mstr_rsp);
-         
-         // 2. Get next req from sequence to reply to mstr and drive it on the vif
          get_next_req(req);
          if (!$cast(slv_req, req)) begin
             `uvm_fatal("APB_DRV", $sformatf("Could not cast 'req' (%s) to 'slv_req' (%s)", $typename(req), $typename(slv_req)))
          end
          drv_slv_req (slv_req);
          
-         // 3. Send out to TLM and tell sequencer we're ready for the next sequence item
          slv_ap.write(slv_req);
          seq_item_port.item_done();
       end
@@ -249,6 +236,7 @@ task uvma_apb_drv_c::get_next_req(ref uvma_apb_base_seq_item_c req);
    
    seq_item_port.get_next_item(req);
    `uvml_hrtbt()
+   `uvm_info("APB_DRV", $sformatf("Got new req:\n%s", req.sprint()), UVM_MEDIUM)
    
    // Copy cfg fields
    req.mode           = cfg.drv_mode;
@@ -279,25 +267,23 @@ endtask : drv_mstr_req
 task uvma_apb_drv_c::drv_slv_req(uvma_apb_slv_seq_item_c req);
    
    // Latency cycles
-   @(cntxt.vif.drv_slv_cb); //@(slv_mp.drv_slv_cb);
+   @(cntxt.vif.drv_slv_cb);
    repeat (req.latency) begin
-      @(cntxt.vif.drv_slv_cb); //@(slv_mp.drv_slv_cb);
+      @(cntxt.vif.drv_slv_cb);
    end
    
    // Req data
-   cntxt.vif.drv_slv_cb.pready  <= 1'b1; //slv_mp.drv_slv_cb.pready  <= 1'b1;
-   cntxt.vif.drv_slv_cb.pslverr <= req.slverr; //slv_mp.drv_slv_cb.pslverr <= req.slverr;
-   for (int unsigned ii=0; ii<cfg.data_bus_width; ii++) begin
-      cntxt.vif.drv_slv_cb.prdata[ii] <= req.rdata[ii]; //slv_mp.drv_slv_cb.prdata[ii] <= req.rdata[ii];
-   end
+   cntxt.vif.drv_slv_cb.pready  = 1'b1;
+   cntxt.vif.drv_slv_cb.pslverr = req.slverr;
+   cntxt.vif.drv_slv_cb.prdata  = req.rdata;
    
    // Hold cycles
    repeat (req.hold_duration) begin
-      @(cntxt.vif.drv_slv_cb); //@(slv_mp.drv_slv_cb);
+      @(cntxt.vif.drv_slv_cb);
    end
    
    // Idle
-   @(cntxt.vif.drv_slv_cb); //@(slv_mp.drv_slv_cb);
+   @(cntxt.vif.drv_slv_cb);
    drv_slv_idle();
    
 endtask : drv_slv_req
@@ -320,57 +306,52 @@ endtask : process_mstr_rsp
 
 task uvma_apb_drv_c::drv_mstr_read_req(uvma_apb_mstr_seq_item_c req);
    
-   // Setup phase
-   @(/*mstr_mp*/cntxt.vif.drv_mstr_cb);
-   /*mstr_mp*/cntxt.vif.drv_mstr_cb.pwrite <= 0;
-   for (int unsigned ii=0; ii<cfg.addr_bus_width; ii++) begin
-      /*mstr_mp*/cntxt.vif.drv_mstr_cb.paddr[ii] <= req.address[ii];
-   end
-   for (int unsigned ii=0; ii<cfg.sel_width; ii++) begin
-      /*mstr_mp*/cntxt.vif.drv_mstr_cb.psel[ii] <= req.slv_sel[ii];
-   end
+   `uvm_info("APB_DRV", $sformatf("Driving read on MSTR for address %h. cfg.addr_bus_width=%0d, cfg.data_bus_width=%0d", req.address, cfg.addr_bus_width, cfg.data_bus_width), UVM_MEDIUM)
    
-   // Access phase
-   @(/*mstr_mp*/cntxt.vif.drv_mstr_cb);
-   /*mstr_mp*/cntxt.vif.drv_mstr_cb.penable <= 1;
+   @(cntxt.vif.drv_mstr_cb);
+   cntxt.vif.drv_mstr_cb.pwrite = 0;
+   cntxt.vif.drv_mstr_cb.paddr = req.address;
+   cntxt.vif.drv_mstr_cb.psel[0] = 1;
+   
+   @(cntxt.vif.drv_mstr_cb);
+   cntxt.vif.drv_mstr_cb.penable = 1;
    do begin
-      @(/*mstr_mp*/cntxt.vif.drv_mstr_cb);
-   end while (/*mstr_mp*/cntxt.vif.drv_mstr_cb.pready !== 1'b1);
+      @(cntxt.vif.drv_mstr_cb);
+   end while (cntxt.vif.drv_mstr_cb.pready !== 1'b1);
+   req.rdata = cntxt.vif.prdata;
+   req.__has_error = cntxt.vif.pslverr;
    
-   // Finish up
-   @(/*mstr_mp*/cntxt.vif.drv_mstr_cb);
-   /*mstr_mp*/cntxt.vif.drv_mstr_cb.penable <= 0;
+   @(cntxt.vif.drv_mstr_cb);
    drv_mstr_idle();
+   cntxt.vif.drv_mstr_cb.penable = 0;
+   cntxt.vif.drv_mstr_cb.psel[0] = 0;
+   @(cntxt.vif.drv_mstr_cb);
    
 endtask : drv_mstr_read_req
 
 
 task uvma_apb_drv_c::drv_mstr_write_req(uvma_apb_mstr_seq_item_c req);
    
-   // Setup phase
-   @(/*mstr_mp*/cntxt.vif.drv_mstr_cb);
-   /*mstr_mp*/cntxt.vif.drv_mstr_cb.pwrite <= 1;
-   for (int unsigned ii=0; ii<cfg.addr_bus_width; ii++) begin
-      /*mstr_mp*/cntxt.vif.drv_mstr_cb.paddr[ii] <= req.address[ii];
-   end
-   for (int unsigned ii=0; ii<cfg.sel_width; ii++) begin
-      /*mstr_mp*/cntxt.vif.drv_mstr_cb.psel[ii] <= req.slv_sel[ii];
-   end
-   for (int unsigned ii=0; ii<cfg.data_bus_width; ii++) begin
-      /*mstr_mp*/cntxt.vif.drv_mstr_cb.pwdata[ii] <= req.wdata[ii];
-   end
+`uvm_info("APB_DRV", $sformatf("Driving read on MSTR for address %h and data. cfg.addr_bus_width=%0d, cfg.data_bus_width=%0d", req.address, req.wdata, cfg.addr_bus_width, cfg.data_bus_width), UVM_MEDIUM)
    
-   // Access phase
-   @(/*mstr_mp*/cntxt.vif.drv_mstr_cb);
-   /*mstr_mp*/cntxt.vif.drv_mstr_cb.penable <= 1;
+   @(cntxt.vif.drv_mstr_cb);
+   cntxt.vif.drv_mstr_cb.pwrite  = 1;
+   cntxt.vif.drv_mstr_cb.paddr   = req.address;
+   cntxt.vif.drv_mstr_cb.pwdata  = req.rdata;
+   cntxt.vif.drv_mstr_cb.psel[0] = 1;
+   
+   @(cntxt.vif.drv_mstr_cb);
+   cntxt.vif.drv_mstr_cb.penable = 1;
    do begin
-      @(/*mstr_mp*/cntxt.vif.drv_mstr_cb);
-   end while (/*mstr_mp*/cntxt.vif.drv_mstr_cb.pready !== 1'b1);
+      @(cntxt.vif.drv_mstr_cb);
+   end while (cntxt.vif.drv_mstr_cb.pready !== 1'b1);
+   req.__has_error = cntxt.vif.pslverr;
    
-   // Finish up
-   @(/*mstr_mp*/cntxt.vif.drv_mstr_cb);
+   @(cntxt.vif.drv_mstr_cb);
    drv_mstr_idle();
-   /*mstr_mp*/cntxt.vif.drv_mstr_cb.penable <= 0;
+   cntxt.vif.drv_mstr_cb.penable = 0;
+   cntxt.vif.drv_mstr_cb.psel[0] = 0;
+   @(cntxt.vif.drv_mstr_cb);
    
 endtask : drv_mstr_write_req
 
@@ -382,25 +363,21 @@ task uvma_apb_drv_c::drv_mstr_idle();
       
       UVMA_APB_DRV_IDLE_ZEROS: begin
          /*mstr_mp*/cntxt.vif.drv_mstr_cb.paddr  <= '0;
-         /*mstr_mp*/cntxt.vif.drv_mstr_cb.psel   <= '0;
          /*mstr_mp*/cntxt.vif.drv_mstr_cb.pwdata <= '0;
       end
       
       UVMA_APB_DRV_IDLE_RANDOM: begin
          /*mstr_mp*/cntxt.vif.drv_mstr_cb.paddr  <= $urandom();
-         /*mstr_mp*/cntxt.vif.drv_mstr_cb.psel   <= $urandom();
          /*mstr_mp*/cntxt.vif.drv_mstr_cb.pwdata <= $urandom();
       end
       
       UVMA_APB_DRV_IDLE_X: begin
          /*mstr_mp*/cntxt.vif.drv_mstr_cb.paddr  <= 'X;
-         /*mstr_mp*/cntxt.vif.drv_mstr_cb.psel   <= 'X;
          /*mstr_mp*/cntxt.vif.drv_mstr_cb.pwdata <= 'X;
       end
       
       UVMA_APB_DRV_IDLE_Z: begin
          /*mstr_mp*/cntxt.vif.drv_mstr_cb.paddr  <= 'Z;
-         /*mstr_mp*/cntxt.vif.drv_mstr_cb.psel   <= 'Z;
          /*mstr_mp*/cntxt.vif.drv_mstr_cb.pwdata <= 'Z;
       end
       

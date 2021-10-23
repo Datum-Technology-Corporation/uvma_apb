@@ -76,44 +76,14 @@ class uvma_apb_mon_c extends uvml_mon_c;
    extern task mon_post_reset(uvm_phase phase);
    
    /**
-    * Creates trn by sampling the interface's (cntxt.vif) signals.
+    * TODO Describe uvma_apb_mon_c::mon_bus()
     */
-   extern task mon_fsm(uvma_apb_mon_trn_c trn);
-   
-   /**
-    * TODO Describe uvma_apb_mon_c::mon_fsm_inactive()
-    */
-   extern task mon_fsm_inactive(uvma_apb_mon_trn_c trn);
-   
-   /**
-    * TODO Describe uvma_apb_mon_c::mon_fsm_setup()
-    */
-   extern task mon_fsm_setup(uvma_apb_mon_trn_c trn);
-   
-   /**
-    * TODO Describe uvma_apb_mon_c::mon_fsm_access()
-    */
-   extern task mon_fsm_access(uvma_apb_mon_trn_c trn);
-   
-   /**
-    * TODO Describe uvma_apb_mon_c::send_drv_trn()
-    */
-   extern task send_drv_trn(uvma_apb_mon_trn_c trn);
+   extern task mon_bus(output uvma_apb_mon_trn_c trn);
    
    /**
     * TODO Describe uvma_apb_mon_c::process_trn()
     */
    extern function void process_trn(uvma_apb_mon_trn_c trn);
-   
-   /**
-    * TODO Describe uvma_apb_mon_c::check_signals_same()
-    */
-   extern task check_signals_same(uvma_apb_mon_trn_c trn_a, uvma_apb_mon_trn_c trn_b);
-   
-   /**
-    * TODO Describe uvma_apb_mon_c::sample_trn_from_vif()
-    */
-   extern task sample_trn_from_vif(uvma_apb_mon_trn_c trn);
    
 endclass : uvma_apb_mon_c
 
@@ -199,164 +169,32 @@ endtask : mon_in_reset
 task uvma_apb_mon_c::mon_post_reset(uvm_phase phase);
    
    uvma_apb_mon_trn_c  trn;
-   mon_fsm(trn);
    
-   if (trn != null) begin
-      if (cfg.enabled && cfg.is_active && (cfg.drv_mode == UVMA_APB_MODE_MSTR)) begin
-         send_drv_trn(trn);
-      end
-      process_trn(trn);
-      ap.write   (trn);
-      `uvml_hrtbt()
-   end
+   mon_bus(trn);
+   process_trn(trn);
+   ap.write   (trn);
+   `uvml_hrtbt()
    
 endtask : mon_post_reset
 
 
-task uvma_apb_mon_c::mon_fsm(uvma_apb_mon_trn_c trn);
-   
-   case (cntxt.mon_phase)
-      UVMA_APB_PHASE_INACTIVE: mon_fsm_inactive(trn);
-      UVMA_APB_PHASE_SETUP   : mon_fsm_setup   (trn);
-      UVMA_APB_PHASE_ACCESS  : mon_fsm_access  (trn);
-   endcase
-   
-endtask : mon_fsm
-
-
-function void uvma_apb_mon_c::process_trn(uvma_apb_mon_trn_c trn);
-   
-   // TODO Implement uvma_apb_mon_c::process_trn()
-   
-endfunction : process_trn
-
-
-task uvma_apb_mon_c::mon_fsm_inactive(uvma_apb_mon_trn_c trn);
-   
-   bit  [`UVMA_APB_PSEL_MAX_SIZE-1:0]  psel      = 0;
-   bit                                 is_active = 0;
+task uvma_apb_mon_c::mon_bus(output uvma_apb_mon_trn_c trn);
    
    do begin
-      @(cntxt.vif.mon_cb); //@(mp.mon_cb);
-      psel = cntxt.vif.mon_cb.psel; //psel = mp.mon_cb.psel;
-      for (int ii=(`UVMA_APB_PSEL_MAX_SIZE-1); ii>=cfg.sel_width; ii--) begin
-         psel[ii] = 0;
-      end
-      
-      if (psel !== '0) begin
-         foreach (cfg.mon_slv_list[ii]) begin
-            if (psel === cfg.mon_slv_list[ii]) begin
-               is_active = 1;
-               cntxt.mon_phase = UVMA_APB_PHASE_SETUP;
-            end
-         end
-      end
-   end while (!is_active);
-   
-endtask : mon_fsm_inactive
-
-
-task uvma_apb_mon_c::mon_fsm_setup(uvma_apb_mon_trn_c trn);
-   
-   uvma_apb_mon_trn_c  _trn;
-   bit                 is_enabled = 0;
-   
-   sample_trn_from_vif(trn);
-   
-   if (cfg.enabled && cfg.is_active && (cfg.drv_mode == UVMA_APB_MODE_SLV)) begin
-      send_drv_trn(trn);
-   end
-   
-   do begin
-      @(cntxt.vif.mon_cb); //@(mp.mon_cb);
-      sample_trn_from_vif(_trn);
-      check_signals_same(trn, _trn);
-      if (cntxt.vif.mon_cb.penable === 1'b1) begin //if (mp.mon_cb.penable === 1'b1) begin
-         is_enabled = 1;
-         cntxt.mon_phase = UVMA_APB_PHASE_ACCESS;
-      end
-   end while (!is_enabled);
-   
-endtask : mon_fsm_setup
-
-
-task uvma_apb_mon_c::mon_fsm_access(uvma_apb_mon_trn_c trn);
-   
-   uvma_apb_mon_trn_c  _trn;
-   bit                 is_finished = 0;
-   
-   do begin
-      if ((cntxt.vif.mon_cb.penable === 1'b1) && (cntxt.vif.mon_cb.pready === 1'b1)) begin //if ((mp.mon_cb.penable === 1'b1) && (mp.mon_cb.pready === 1'b1)) begin
-         is_finished = 1;
-         cntxt.mon_phase = UVMA_APB_PHASE_INACTIVE;
-         if (trn.access_type == UVMA_APB_ACCESS_READ) begin
-            for (int unsigned ii=0; ii<cfg.data_bus_width; ii++) begin
-               trn.data[ii] = cntxt.vif.prdata[ii];
-            end
-         end
-         trn.set_error(cntxt.vif.pslverr);
-      end
-      else if (cntxt.vif.mon_cb.penable === 1'b0) begin//else if (mp.mon_cb.penable === 1'b0) begin
-         trn.set_error(1);
-         `uvm_error("APB_MON", $sformatf("penable deasserted before pready is asserted (transfer aborted):\n%s", trn.sprint()))
-         is_finished = 1;
-      end
-      
-      @(cntxt.vif.mon_cb); //@(mp.mon_cb);
-      sample_trn_from_vif(_trn);
-      check_signals_same(trn, _trn);
-      trn.latency++;
-   end while (!is_finished);
-   
-endtask : mon_fsm_access
-
-
-task uvma_apb_mon_c::send_drv_trn(uvma_apb_mon_trn_c trn);
-   
-   drv_rsp_ap.write(trn);
-   
-endtask : send_drv_trn
-
-
-
-task uvma_apb_mon_c::check_signals_same(uvma_apb_mon_trn_c trn_a, uvma_apb_mon_trn_c trn_b);
-   
-   if (trn_a.access_type !== trn_b.access_type) begin
-      `uvm_error("APB_MON", $sformatf("pwrite changed before end of transfer (0->1):\n%s", trn_a.sprint()))
-      trn_a.set_error(1);
-   end
-   
-   if (trn_a.data !== trn_b.data) begin
-      `uvm_error("APB_MON", $sformatf("pwdata changed before end of transfer (%h->&h):\n%s", trn_a.data, trn_b.data, trn_a.sprint()))
-      trn_a.set_error(1);
-   end
-   
-   if (trn_a.address !== trn_b.address) begin
-      `uvm_error("APB_MON", $sformatf("paddr changed before end of transfer (%h->&h):\n%s", trn_a.address, trn_b.address, trn_a.sprint()))
-      trn_a.set_error(1);
-   end
-   
-   if (trn_a.slv_sel !== trn_b.slv_sel) begin
-      `uvm_error("APB_MON", $sformatf("psel changed before end of transfer (%h->&h):\n%s", trn_a.slv_sel, trn_b.slv_sel, trn_a.sprint()))
-      trn_a.set_error(1);
-   end
-   
-endtask : check_signals_same
-
-
-task uvma_apb_mon_c::sample_trn_from_vif(uvma_apb_mon_trn_c trn);
+      @(cntxt.vif.mon_cb);
+   end while ((cntxt.vif.mon_cb.penable !== 1'b1) || (cntxt.vif.mon_cb.psel[0] !== 1'b1));
    
    trn = uvma_apb_mon_trn_c::type_id::create("trn");
    trn.set_initiator(this);
    trn.set_timestamp_start($realtime());
    
-   if (cntxt.vif.mon_cb.pwrite === 1'b1) begin //if (mp.mon_cb.pwrite === 1'b1) begin
+   if (cntxt.vif.mon_cb.pwrite === 1'b1) begin
       trn.access_type = UVMA_APB_ACCESS_WRITE;
-      for (int unsigned ii=0; ii<cfg.data_bus_width; ii++) begin
-         trn.data[ii] = cntxt.vif.mon_cb.pwdata[ii]; //trn.data[ii] = mp.mon_cb.pwdata[ii];
-      end
+      //for (int unsigned ii=0; ii<cfg.data_bus_width; ii++) begin
+         trn.data/*[ii]*/ = cntxt.vif.mon_cb.pwdata/*[ii]*/;
+      //end
    end
-   else if (cntxt.vif.mon_cb.pwrite === 1'b0) begin //else if (mp.mon_cb.pwrite === 1'b0) begin
+   else if (cntxt.vif.mon_cb.pwrite === 1'b0) begin 
       trn.access_type = UVMA_APB_ACCESS_READ;
    end
    else begin
@@ -364,14 +202,32 @@ task uvma_apb_mon_c::sample_trn_from_vif(uvma_apb_mon_trn_c trn);
       //`uvm_error("APB_MON", $sformatf("Invalid pwrite value: %h", mp.mon_cb.pwrite))
    end
    
-   for (int unsigned ii=0; ii<cfg.addr_bus_width; ii++) begin
-      trn.address[ii] = cntxt.vif.mon_cb.paddr[ii]; //trn.address[ii] = mp.mon_cb.paddr[ii];
-   end
-   for (int unsigned ii=0; ii<cfg.sel_width; ii++) begin
-      trn.slv_sel[ii] = cntxt.vif.mon_cb.psel[ii]; //trn.slv_sel[ii] = mp.mon_cb.psel[ii];
-   end
+   //for (int unsigned ii=0; ii<cfg.addr_bus_width; ii++) begin
+      trn.address/*[ii]*/ = cntxt.vif.mon_cb.paddr/*[ii]*/;
+   //end
+   //for (int unsigned ii=0; ii<cfg.sel_width; ii++) begin
+    //  trn.slv_sel/*[ii]*/ = cntxt.vif.mon_cb.psel/*[ii]*/;
+   //end
    
-endtask : sample_trn_from_vif
+   do begin
+      @(cntxt.vif.mon_cb);
+   end while ((cntxt.vif.mon_cb.penable !== 1'b1) || (cntxt.vif.mon_cb.pready !== 1'b1));
+   
+   if (trn.access_type === UVMA_APB_ACCESS_READ) begin 
+      trn.data = cntxt.vif.mon_cb.prdata;
+   end
+   trn.slv_err = cntxt.vif.mon_cb.pslverr;
+   trn.set_error(trn.slv_err);
+   trn.set_timestamp_end($realtime());
+   
+endtask : mon_bus
+
+
+function void uvma_apb_mon_c::process_trn(uvma_apb_mon_trn_c trn);
+   
+   // TODO Implement uvma_apb_mon_c::process_trn()
+   
+endfunction : process_trn
 
 
 `endif // __UVMA_APB_MON_SV__

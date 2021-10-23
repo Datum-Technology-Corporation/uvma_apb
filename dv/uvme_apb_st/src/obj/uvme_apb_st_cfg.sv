@@ -19,7 +19,7 @@
  * Advanced Peripheral Bus VIP Self-Testing Environment (uvme_apb_st_env_c)
  * components.
  */
-class uvme_apb_st_cfg_c extends uvm_object;
+class uvme_apb_st_cfg_c extends uvml_cfg_c;
    
    // Integrals
    rand bit                      enabled;
@@ -27,10 +27,13 @@ class uvme_apb_st_cfg_c extends uvm_object;
    rand bit                      scoreboarding_enabled;
    rand bit                      cov_model_enabled;
    rand bit                      trn_log_enabled;
+   rand int unsigned             addr_bus_width;
+   rand int unsigned             data_bus_width;
+   rand int unsigned             sel_width     ;
    
    // Objects
-   rand uvma_apb_cfg_c  mstr_cfg;
-   rand uvma_apb_cfg_c  slv_cfg;
+   rand uvma_apb_cfg_c          mstr_cfg;
+   rand uvma_apb_cfg_c          slv_cfg;
    rand uvml_sb_simplex_cfg_c   sb_cfg;
    
    
@@ -40,6 +43,9 @@ class uvme_apb_st_cfg_c extends uvm_object;
       `uvm_field_int (                         scoreboarding_enabled, UVM_DEFAULT)
       `uvm_field_int (                         cov_model_enabled    , UVM_DEFAULT)
       `uvm_field_int (                         trn_log_enabled      , UVM_DEFAULT)
+      `uvm_field_int (                         addr_bus_width       , UVM_DEFAULT + UVM_DEC)
+      `uvm_field_int (                         data_bus_width       , UVM_DEFAULT + UVM_DEC)
+      `uvm_field_int (                         sel_width            , UVM_DEFAULT + UVM_DEC)
       
       `uvm_field_object(mstr_cfg, UVM_DEFAULT)
       `uvm_field_object(slv_cfg , UVM_DEFAULT)
@@ -53,6 +59,10 @@ class uvme_apb_st_cfg_c extends uvm_object;
       soft scoreboarding_enabled  == 1;
       soft cov_model_enabled      == 0;
       soft trn_log_enabled        == 1;
+      
+      addr_bus_width == 32;
+      data_bus_width ==32;
+      sel_width == 1;
    }
    
    constraint agents_generic_cfg_cons {
@@ -82,19 +92,24 @@ class uvme_apb_st_cfg_c extends uvm_object;
          /*soft*/ mstr_cfg.trn_log_enabled == 0;
          /*soft*/ slv_cfg .trn_log_enabled == 0;
       }
+      
+      mstr_cfg.drv_idle == UVMA_APB_DRV_IDLE_ZEROS;
+      slv_cfg .drv_idle == UVMA_APB_DRV_IDLE_ZEROS;
+      
+      mstr_cfg.mon_slv_list.size() == 1;
+      slv_cfg.mon_slv_list.size() == mstr_cfg.mon_slv_list.size();
    }
    
    constraint agents_protocol_cons {
-      mstr_cfg.addr_bus_width == slv_cfg.addr_bus_width;
-      mstr_cfg.data_bus_width == slv_cfg.data_bus_width;
-      mstr_cfg.sel_width      == slv_cfg.sel_width     ;
+      mstr_cfg.addr_bus_width == addr_bus_width;
+      mstr_cfg.data_bus_width == data_bus_width;
+      mstr_cfg.sel_width      == 1     ;
+      slv_cfg .addr_bus_width == addr_bus_width;
+      slv_cfg .data_bus_width == data_bus_width;
+      slv_cfg .sel_width      == 1     ;
       
       mstr_cfg.drv_mode == UVMA_APB_MODE_MSTR;
       slv_cfg .drv_mode == UVMA_APB_MODE_SLV ;
-      
-      foreach (mstr_cfg.mon_slv_list[ii]) {
-         slv_cfg.mon_slv_list[ii] == mstr_cfg.mon_slv_list[ii];
-      }
    }
    
    constraint sb_cfg_cons {
@@ -112,6 +127,11 @@ class uvme_apb_st_cfg_c extends uvm_object;
     */
    extern function new(string name="uvme_apb_st_cfg");
    
+   /**
+    * TODO Describe uvme_apb_st_cfg_c::post_randomize()
+    */
+   extern function void post_randomize();
+   
 endclass : uvme_apb_st_cfg_c
 
 
@@ -119,11 +139,23 @@ function uvme_apb_st_cfg_c::new(string name="uvme_apb_st_cfg");
    
    super.new(name);
    
-   mstr_cfg = uvma_apb_cfg_c::type_id::create("mstr_cfg");
-   slv_cfg  = uvma_apb_cfg_c::type_id::create("slv_cfg" );
-   sb_cfg   = uvml_sb_simplex_cfg_c ::type_id::create("sb_cfg"  );
+   mstr_cfg = uvma_apb_cfg_c         ::type_id::create("mstr_cfg");
+   slv_cfg  = uvma_apb_cfg_c        ::type_id::create("slv_cfg" );
+   sb_cfg   = uvml_sb_simplex_cfg_c ::type_id::create("sb_cfg");
    
 endfunction : new
+
+
+function void uvme_apb_st_cfg_c::post_randomize();
+   
+   super.post_randomize();
+   
+   foreach (mstr_cfg.mon_slv_list[ii]) begin
+      mstr_cfg.mon_slv_list[ii] = ii;
+      slv_cfg.mon_slv_list[ii] = mstr_cfg.mon_slv_list[ii];
+   end
+   
+endfunction : post_randomize
 
 
 `endif // __UVME_APB_ST_CFG_SV__

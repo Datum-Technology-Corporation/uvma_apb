@@ -54,41 +54,39 @@ task uvma_apb_storage_slv_seq_c::body();
    bit [(`UVMA_APB_PADDR_MAX_SIZE-1):0]  addr = 0;
    uvma_apb_slv_seq_item_c               _req;
    
+   `uvm_info("APB_STORAGE_SEQ", "Inside storage seq", UVM_MEDIUM)
    forever begin
-      get_response(rsp);
-      
-      for (int unsigned ii=0; ii<cfg.addr_bus_width; ii++) begin
-         addr[ii] = rsp.address[ii];
+      while ((cntxt.vif.penable !== 1'b1) || (cntxt.vif.psel[0] !== 1'b1)) begin
+         @(cntxt.vif.drv_slv_cb);
       end
-      case (rsp.access_type)
-         UVMA_APB_ACCESS_READ: begin
+      `uvm_info("APB_STORAGE_SEQ", "mstr asserted enable+sel", UVM_MEDIUM)
+      addr = cntxt.vif.drv_slv_cb.paddr;
+      case (cntxt.vif.drv_slv_cb.pwrite)
+         1'b0 : begin
             if (mem.exists(addr)) begin
                `uvm_create(_req)
-               foreach (_req.rdata[ii]) begin
-                  if (ii < cfg.data_bus_width) begin
-                     _req.rdata[ii] = mem[addr][ii];
-                  end
-               end
+               _req.rdata = mem[addr];
                `uvm_send(_req)
             end
             else begin
                `uvm_create(_req)
-               foreach (_req.rdata[ii]) begin
-                  if (ii < cfg.data_bus_width) begin
-                     _req.rdata[ii] = 0;
-                  end
-               end
+               _req.rdata = 0;
                `uvm_send(_req)
             end
          end
          
-         UVMA_APB_ACCESS_WRITE: begin
-            mem[addr] = '0;
+         1'b1 : begin
+            mem[addr] = cntxt.vif.pwdata;
             `uvm_do(_req)
          end
          
-         default: `uvm_fatal("APB_STORAGE_SLV_SEQ", $sformatf("Invalid access_type (%0d):\n%s", rsp.access_type, rsp.sprint()))
+         default: `uvm_error("APB_STORAGE_SLV_SEQ", $sformatf("Invalid access_type (%0d):\n%s", rsp.access_type, rsp.sprint()))
       endcase
+      
+      
+      while ((cntxt.vif.penable === 1'b1) && (cntxt.vif.psel[0] === 1'b1)) begin
+         @(cntxt.vif.drv_slv_cb);
+      end
    end
    
 endtask : body
