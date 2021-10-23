@@ -76,14 +76,14 @@ class uvma_apb_seq_item_logger_c extends uvml_logs_seq_item_logger_c#(
    virtual function void print_header();
       
       if (cfg.drv_mode == UVMA_APB_MODE_MSTR) begin
-         fwrite("-------------------------------------------");
-         fwrite("     TIME     |  ACC  | ADDRESS | SLV_SEL | DATA ");
-         fwrite("-------------------------------------------");
+         fwrite("-------------------------------------------------");
+         fwrite("        TIME        |  ACC  | ADDRESS | SLV_SEL | DATA ");
+         fwrite("-------------------------------------------------");
       end
       else begin
-         fwrite("-------------------------");
-         fwrite("     TIME     | SLV_ERR | RDATA ");
-         fwrite("-------------------------");
+         fwrite("-------------------------------");
+         fwrite("        TIME        | SLV_ERR | RDATA ");
+         fwrite("-------------------------------");
       end
       
    endfunction : print_header

@@ -56,9 +56,9 @@ class uvma_apb_mon_trn_logger_c extends uvml_logs_mon_trn_logger_c#(
     */
    virtual function void print_header();
       
-      fwrite("---------------------------------------------------");
-      fwrite("     TIME     |  ACC  | ADDRESS | SLV_SEL | SLV_ERR | DATA ");
-      fwrite("---------------------------------------------------");
+      fwrite("-----------------------------------------------------------");
+      fwrite("        TIME        |  ACC  | ADDRESS | SLV_SEL | SLV_ERR | DATA ");
+      fwrite("-----------------------------------------------------------");
       
    endfunction : print_header
    

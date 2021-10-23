@@ -29,10 +29,11 @@ class uvme_apb_st_env_c extends uvm_env;
    uvma_apb_agent_c  slv_agent ;
    
    // Components
-   uvme_apb_st_cov_model_c   cov_model;
-   uvme_apb_st_prd_c         predictor;
-   uvme_apb_st_sb_simplex_c  sb;
-   uvme_apb_st_vsqr_c        vsequencer;
+   uvme_apb_st_cov_model_c     cov_model;
+   uvme_apb_st_prd_c           predictor;
+   uvme_apb_st_sb_simplex_c    sb;
+   uvme_apb_st_vsqr_c          vsequencer;
+   uvme_apb_st_slv_sb_delay_c  slv_delay;
    
    
    `uvm_component_utils_begin(uvme_apb_st_env_c)
@@ -211,8 +212,9 @@ endfunction: create_agents
 function void uvme_apb_st_env_c::create_env_components();
    
    if (cfg.scoreboarding_enabled) begin
-      predictor = uvme_apb_st_prd_c       ::type_id::create("predictor", this);
-      sb        = uvme_apb_st_sb_simplex_c::type_id::create("sb"       , this);
+      predictor = uvme_apb_st_prd_c         ::type_id::create("predictor", this);
+      sb        = uvme_apb_st_sb_simplex_c  ::type_id::create("sb"       , this);
+      slv_delay = uvme_apb_st_slv_sb_delay_c::type_id::create("slv_delay", this);
    end
    
 endfunction: create_env_components
@@ -243,7 +245,8 @@ endfunction: connect_predictor
 function void uvme_apb_st_env_c::connect_scoreboard();
    
    // Connect agent -> scoreboard
-   slv_agent.mon_ap.connect(sb.act_export);
+   slv_delay.out_ap.connect(sb.act_export);
+   slv_agent.mon_ap.connect(slv_delay.in_export);
    
    // Connect predictor -> scoreboard
    predictor.out_ap.connect(sb.exp_export);

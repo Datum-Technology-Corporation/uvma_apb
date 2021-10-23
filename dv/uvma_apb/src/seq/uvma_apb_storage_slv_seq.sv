@@ -59,6 +59,7 @@ task uvma_apb_storage_slv_seq_c::body();
          @(cntxt.vif.drv_slv_cb);
       end
       addr = cntxt.vif.drv_slv_cb.paddr;
+      `uvm_info("APB_STORAGE_SEQ", $sformatf("Request from mstr: address (x%h) , write (%b), wdata (%h)", addr, cntxt.vif.drv_slv_cb.pwrite, cntxt.vif.pwdata), UVM_MEDIUM)
       case (cntxt.vif.drv_slv_cb.pwrite)
          1'b0 : begin
             if (mem.exists(addr)) begin
