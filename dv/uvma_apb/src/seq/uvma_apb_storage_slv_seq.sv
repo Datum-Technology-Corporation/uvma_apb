@@ -54,12 +54,10 @@ task uvma_apb_storage_slv_seq_c::body();
    bit [(`UVMA_APB_PADDR_MAX_SIZE-1):0]  addr = 0;
    uvma_apb_slv_seq_item_c               _req;
    
-   `uvm_info("APB_STORAGE_SEQ", "Inside storage seq", UVM_MEDIUM)
    forever begin
       while ((cntxt.vif.penable !== 1'b1) || (cntxt.vif.psel[0] !== 1'b1)) begin
          @(cntxt.vif.drv_slv_cb);
       end
-      `uvm_info("APB_STORAGE_SEQ", "mstr asserted enable+sel", UVM_MEDIUM)
       addr = cntxt.vif.drv_slv_cb.paddr;
       case (cntxt.vif.drv_slv_cb.pwrite)
          1'b0 : begin
