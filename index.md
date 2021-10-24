@@ -12,7 +12,7 @@ The [Moore.io](https://www.mooreio.com) AMBA® IP Suite's Advanced Peripheral Bu
 ## Management
 
 | **[Issues](https://github.com/Datum-Technology-Corporation/uvma_apb/issues)** | **[Discussions](https://github.com/Datum-Technology-Corporation/uvma_apb/discussions)** |
-| **[Projects](https://github.com/Datum-Technology-Corporation/uvma_apb/projects)** | **[Wiki](https://github.com/Datum-Technology-Corporation/uvma_apb/wiki)** |
+| **[Sub-Projects](https://github.com/Datum-Technology-Corporation/uvma_apb/projects)** | **[Wiki](https://github.com/Datum-Technology-Corporation/uvma_apb/wiki)** |
 
 
 ## Downloads
