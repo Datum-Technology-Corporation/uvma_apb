@@ -27,8 +27,8 @@ export PROJECT_TOOLS_IMPORT_DIR=${PROJECT_TOOLS_DIR}/.imports
 ### Tools ###
 # Local
 # Imports
-export TOOLS_DVM_SRC_PATH=${PROJECT_TOOLS_IMPORT_DIR}/dvm/src
-alias dvm="${TOOLS_DVM_SRC_PATH}/dvm.py"
+export TOOLS_MIO_PATH=${PROJECT_TOOLS_DIR}/.imports/mio
+alias mio="${TOOLS_MIO_PATH}/mio.py"
 
 
 ### RTL ###

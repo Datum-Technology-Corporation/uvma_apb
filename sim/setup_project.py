@@ -42,7 +42,7 @@ tools_imports_path = tools_path + "/.imports"
 
 def main():
     print("Fetching project dependencies ...")
-    clone_repo_tools_to_imports("https://github.com/Datum-Technology-Corporation/uvml.git"     , "main", "dvm"      )
+    clone_mio_cli()
     clone_repo_dv_to_imports   ("https://github.com/Datum-Technology-Corporation/uvm.git"      , "main", "uvm"      )
     clone_repo_dv_to_imports   ("https://github.com/Datum-Technology-Corporation/uvml.git"     , "main", "uvml"     )
     clone_repo_dv_to_imports   ("https://github.com/Datum-Technology-Corporation/uvml_ral.git" , "main", "uvml_ral" )
@@ -61,6 +61,23 @@ def copy_tree(src, dst, symlinks=False, ignore=None):
             shutil.copytree(s, d, symlinks, ignore)
         else:
             shutil.copy2(s, d)
+
+def clone_mio_cli():
+    tools_ip_name = "mio"
+    dst_path = tools_imports_path + "/" + tools_ip_name
+    branch = "main"
+    uri = "https://github.com/Datum-Technology-Corporation/mio_cli.git"
+    
+    if not os.path.exists(tools_imports_path):
+        os.mkdir(tools_imports_path)
+    if os.path.exists(temp_path):
+        shutil.rmtree(temp_path)
+    if os.path.exists(dst_path):
+        shutil.rmtree(dst_path)
+    os.mkdir(dst_path)
+    subprocess.call("git clone -q --branch " + branch + " " + uri + " " + temp_path, shell=True)
+    copy_tree(temp_path + "/src", dst_path)
+    shutil.rmtree(temp_path)
 
 def clone_repo_tools_to_imports(uri, branch, tools_ip_name):
     dst_path = tools_imports_path + "/" + tools_ip_name
