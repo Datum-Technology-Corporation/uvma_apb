@@ -22,7 +22,7 @@ The [Moore.io](https://www.mooreio.com) AMBA® IP Suite's Advanced Peripheral Bu
 | [Source Code](https://mooreio.com/packages/uvma_apb.tgz) | Source Code (Coming Soon) | Source Code (Coming Soon) |
 | Documentation (Coming Soon) | Documentation (Coming Soon) | Documentation (Coming Soon) |
 
-> **[View All Releases](Coming Soon)**
+> **[View All Releases](releases.md)**
 
 
 ## Metrics
