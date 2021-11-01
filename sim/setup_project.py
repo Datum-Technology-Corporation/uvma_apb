@@ -76,7 +76,7 @@ def clone_mio_cli():
         shutil.rmtree(dst_path)
     os.mkdir(dst_path)
     subprocess.call("git clone -q --branch " + branch + " " + uri + " " + temp_path, shell=True)
-    copy_tree(temp_path + "/src", dst_path)
+    copy_tree(temp_path, dst_path)
     shutil.rmtree(temp_path)
 
 def clone_repo_tools_to_imports(uri, branch, tools_ip_name):

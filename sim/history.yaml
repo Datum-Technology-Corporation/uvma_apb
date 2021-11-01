@@ -1,16 +1,16 @@
 uvmt_apb_st:
   compilation_log_path: /home/dpoulin/git/uvma_apb/sim/results/uvmt_apb_st.cmp.log
-  compilation_timestamp: 2021/10/22-15:50:26
+  compilation_timestamp: 2021/10/23-00:47:58
   elaboration_log_path: /home/dpoulin/git/uvma_apb/sim/results/uvmt_apb_st.elab.log
-  elaboration_timestamp: 2021/10/22-15:50:31
+  elaboration_timestamp: 2021/10/23-00:48:04
   simulations:
-    /home/dpoulin/git/uvma_apb/sim/results/uvmt_apb_st_reads_test_1:
+    /home/dpoulin/git/uvma_apb/sim/results/uvmt_apb_st_all_access_test_1:
       args: []
       cov: false
-      duration: 93
-      end: 2021/10/22-15:53:54
-      results: /home/dpoulin/git/uvma_apb/sim/results/uvmt_apb_st_reads_test_1
+      duration: 58
+      end: 2021/10/23-00:51:14
+      results: /home/dpoulin/git/uvma_apb/sim/results/uvmt_apb_st_all_access_test_1
       seed: '1'
-      start: 2021/10/22-15:52:21
-      test_name: reads
-      waves: false
+      start: 2021/10/23-00:50:15
+      test_name: all_access
+      waves: true
