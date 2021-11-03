@@ -5,4 +5,4 @@
 `source ./setup_terminal.sh`
 
 # Running simulations
-`dvm --help`
+`mio --help`
