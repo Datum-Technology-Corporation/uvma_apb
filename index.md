@@ -27,7 +27,7 @@ The [Moore.io](https://www.mooreio.com) AMBA® IP Suite's Advanced Peripheral Bu
 
 ## Metrics
 
-| Latest Release (v1.0 Beta 0) | Stable (Nightly) | Stable (Weekly) |
+| Latest Release (v1.0 Beta 0) | Stable (Weekly) | Stable (Nightly) |
 | --------------------- | ---------------- | --------------- |
 | Functional Coverage Report (Coming Soon) | Functional Coverage Report (Coming Soon) | Functional Coverage Report (Coming Soon) |
 | [Release Regression Test Report](https://mooreio.com/packages/uvma_apb/sim/results.html) | Regression Test Report (Coming Soon) | Regression Test Report (Coming Soon) |
