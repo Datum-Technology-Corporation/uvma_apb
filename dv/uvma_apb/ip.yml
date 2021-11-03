@@ -1,0 +1,44 @@
+ip:
+  name: "uvma_apb"
+  version: "1.0.0 Beta 0"
+  full-name: "Moore.io APB UVM Agent"
+  type: "DV"
+  sub-type: "UVM Agent"
+  sub-sub-type: "Simplex; Non-Layered"
+  description: >
+    
+  home-page: "https://datum-technology-corporation.github.io/uvma_apb/"
+  repo-uri: "https://github.com/Datum-Technology-Corporation/uvma_apb.git"
+  bugs: "https://github.com/Datum-Technology-Corporation/uvma_apb/issues"
+  aliases: []
+  logo: ""
+  block-diagram: ""
+  languages: ["sv"]
+  simulators-supported:
+    - { name: "vivado", version: "2021.1" }
+  tags: []
+  copyright-holders: ["Datum Technology Corporation"]
+  licenses: ["SHL-2.1"]
+
+structure:
+   scripts-paths : [ "/bin"      ]
+   docs-paths    : [ "/docs"     ]
+   examples-paths: [ "/examples" ]
+   src-paths     : [ "/src"      ]
+
+dependencies:
+  - { type: "DV", name: "uvm"      , repo-uri: "https://github.com/Datum-Technology-Corporation/uvm.git"      , repo-branch: "main", repo-path: "dv/uvm"       }
+  - { type: "DV", name: "uvml"     , repo-uri: "https://github.com/Datum-Technology-Corporation/uvml.git"     , repo-branch: "main", repo-path: "dv/uvml"      }
+  - { type: "DV", name: "uvml_logs", repo-uri: "https://github.com/Datum-Technology-Corporation/uvml_logs.git", repo-branch: "main", repo-path: "dv/uvml_logs" }
+
+hdl-src:
+  directories: [".", "comps", "obj", "seq"]
+  tests-name-template: ""
+  flists:
+    metrics : [ "src/uvma_apb_pkg.flist"      ]
+    riviera : [ "src/uvma_apb_pkg.flist"      ]
+    questa  : [ "src/uvma_apb_pkg.flist"      ]
+    vcs     : [ "src/uvma_apb_pkg.flist"      ]
+    vivado  : [ "src/uvma_apb_pkg.flist.xsim" ]
+    xcelium : [ "src/uvma_apb_pkg.flist"      ]
+
