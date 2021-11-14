@@ -21,10 +21,10 @@ ip:
   licenses: ["SHL-2.1"]
 
 structure:
-   scripts-paths : [ "/bin"      ]
-   docs-paths    : [ "/docs"     ]
-   examples-paths: [ "/examples" ]
-   src-paths     : [ "/src"      ]
+   scripts-paths : [ "bin"      ]
+   docs-paths    : [ "docs"     ]
+   examples-paths: [ "examples" ]
+   src-paths     : [ "src"      ]
 
 dependencies:
   - { type: "DV", name: "uvm"      , repo-uri: "https://github.com/Datum-Technology-Corporation/uvm.git"      , repo-branch: "main", repo-path: "dv/uvm"       }

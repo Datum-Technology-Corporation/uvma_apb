@@ -8,4 +8,6 @@
 /out/
 results/*/*
 results/*
-/history.yaml
+history.yaml
+*.xml
+*.html

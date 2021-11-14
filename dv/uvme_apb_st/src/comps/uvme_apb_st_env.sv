@@ -15,25 +15,24 @@
 
 
 /**
- * Top-level component that encapsulates, builds and connects all other
- * Advanced Peripheral Bus environment components.
+ * Top-level component that encapsulates, builds and connects all other Advanced Peripheral Bus environment components.
  */
 class uvme_apb_st_env_c extends uvm_env;
    
    // Objects
-   uvme_apb_st_cfg_c    cfg;
-   uvme_apb_st_cntxt_c  cntxt;
+   uvme_apb_st_cfg_c    cfg  ; ///< 
+   uvme_apb_st_cntxt_c  cntxt; ///< 
    
    // Agents
-   uvma_apb_agent_c  mstr_agent;
-   uvma_apb_agent_c  slv_agent ;
+   uvma_apb_agent_c  mstr_agent; ///< 
+   uvma_apb_agent_c  slv_agent ; ///< 
    
    // Components
-   uvme_apb_st_cov_model_c     cov_model;
-   uvme_apb_st_prd_c           predictor;
-   uvme_apb_st_sb_simplex_c    sb;
-   uvme_apb_st_vsqr_c          vsequencer;
-   uvme_apb_st_slv_sb_delay_c  slv_delay;
+   uvme_apb_st_cov_model_c             cov_model ; ///< 
+   uvme_apb_st_prd_c                   predictor ; ///< 
+   uvme_apb_st_sb_simplex_c            sb        ; ///< 
+   uvme_apb_st_vsqr_c                  vsequencer; ///< 
+   uvml_delay_c #(uvma_apb_mon_trn_c)  slv_delay ; ///< 
    
    
    `uvm_component_utils_begin(uvme_apb_st_env_c)
@@ -212,9 +211,9 @@ endfunction: create_agents
 function void uvme_apb_st_env_c::create_env_components();
    
    if (cfg.scoreboarding_enabled) begin
-      predictor = uvme_apb_st_prd_c         ::type_id::create("predictor", this);
-      sb        = uvme_apb_st_sb_simplex_c  ::type_id::create("sb"       , this);
-      slv_delay = uvme_apb_st_slv_sb_delay_c::type_id::create("slv_delay", this);
+      predictor = uvme_apb_st_prd_c                 ::type_id::create("predictor", this);
+      sb        = uvme_apb_st_sb_simplex_c          ::type_id::create("sb"       , this);
+      slv_delay = uvml_delay_c #(uvma_apb_mon_trn_c)::type_id::create("slv_delay", this);
    end
    
 endfunction: create_env_components

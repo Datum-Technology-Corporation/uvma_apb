@@ -53,7 +53,6 @@ package uvme_apb_st_pkg;
    `include "uvme_apb_st_cov_model.sv"
    `include "uvme_apb_st_prd.sv"
    `include "uvme_apb_st_vsqr.sv"
-   `include "uvme_apb_st_slv_sb_delay.sv"
    `include "uvme_apb_st_env.sv"
    
    // Virtual sequences
