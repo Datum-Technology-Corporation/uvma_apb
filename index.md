@@ -6,7 +6,7 @@
 ----------------
 
 ## About
-The [Moore.io](https://www.mooreio.com) AMBA® IP Suite's Advanced Peripheral Bus (APB) UVM Agent is a compact solution to Driving/Monitoring both sides of the protocol.
+The [Moore.io](https://www.mooreio.com) AMBA® IP Suite's Advanced Peripheral Bus (APB) UVM Agent is a pure UVM implementaiton for driving and monitoring both sides of the protocol.
 ![Block Diagram](assets/img/agent_block_diagram.svg)
 This project consists of the agent (`uvma_apb_pkg`), the self-testing UVM environment (`uvme_apb_st_pkg`) and the test bench (`uvmt_apb_st_pkg`) to verify the agent against itself.
 
