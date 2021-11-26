@@ -19,4 +19,4 @@ source ./setup_terminal.sh
 ../tools/.imports/mio/src/mio.py sim uvmt_apb_st -t writes -s 1 -c
 ../tools/.imports/mio/src/mio.py sim uvmt_apb_st -t all_access -s 1 -c
 ../tools/.imports/mio/src/mio.py results uvmt_apb_st results
-#../tools/.imports/mio/src/mio.py cov uvmt_apb_st
+../tools/.imports/mio/src/mio.py cov uvmt_apb_st
