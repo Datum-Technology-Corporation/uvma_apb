@@ -66,7 +66,7 @@ def clone_mio_cli():
     tools_ip_name = "mio"
     dst_path = tools_imports_path + "/" + tools_ip_name
     branch = "main"
-    uri = "https://github.com/Datum-Technology-Corporation/mio_cli.git"
+    uri = "https://github.com/Datum-Technology-Corporation/mio_client.git"
     
     if not os.path.exists(tools_imports_path):
         os.mkdir(tools_imports_path)
