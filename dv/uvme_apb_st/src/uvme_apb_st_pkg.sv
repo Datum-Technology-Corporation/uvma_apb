@@ -16,11 +16,11 @@
 
 // Pre-processor macros
 `include "uvm_macros.svh"
-`include "uvml_macros.sv"
-`include "uvml_logs_macros.sv"
-`include "uvml_sb_macros.sv"
-`include "uvma_apb_macros.sv"
-`include "uvme_apb_st_macros.sv"
+`include "uvml_macros.svh"
+`include "uvml_logs_macros.svh"
+`include "uvml_sb_macros.svh"
+`include "uvma_apb_macros.svh"
+`include "uvme_apb_st_macros.svh"
 
 
 // Interface(s) / Module(s) / Checker(s)
@@ -34,30 +34,30 @@
  * Peripheral Bus (APB) UVM Agent.
  */
 package uvme_apb_st_pkg;
-   
+
    import uvm_pkg      ::*;
    import uvml_pkg     ::*;
    import uvml_logs_pkg::*;
    import uvml_sb_pkg  ::*;
    import uvma_apb_pkg ::*;
-   
+
    // Constants / Structs / Enums
    `include "uvme_apb_st_tdefs.sv"
    `include "uvme_apb_st_constants.sv"
-   
+
    // Objects
    `include "uvme_apb_st_cfg.sv"
    `include "uvme_apb_st_cntxt.sv"
-   
+
    // Environment components
    `include "uvme_apb_st_cov_model.sv"
    `include "uvme_apb_st_prd.sv"
    `include "uvme_apb_st_vsqr.sv"
    `include "uvme_apb_st_env.sv"
-   
+
    // Virtual sequences
    `include "uvme_apb_st_seq_lib.sv"
-   
+
 endpackage : uvme_apb_st_pkg
 
 
