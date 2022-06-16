@@ -22,28 +22,28 @@ class uvma_apb_seq_item_logger_c extends uvml_logs_seq_item_logger_c#(
    .T_CFG  (uvma_apb_cfg_c          ),
    .T_CNTXT(uvma_apb_cntxt_c        )
 );
-   
+
    `uvm_component_utils(uvma_apb_seq_item_logger_c)
-   
-   
+
+
    /**
     * Default constructor.
     */
    function new(string name="uvma_apb_seq_item_logger", uvm_component parent=null);
       super.new(name, parent);
    endfunction : new
-   
+
    /**
     * Writes contents of t to disk.
     */
    virtual function void write(uvma_apb_base_seq_item_c t);
-      
+
       uvma_apb_mstr_seq_item_c  t_mstr;
       uvma_apb_slv_seq_item_c   t_slv ;
-      
+
       string access_type;
       string data;
-      
+
       if (cfg.drv_mode == UVMA_APB_MODE_MSTR) begin
          if (!$cast(t_mstr, t)) begin
             `uvm_fatal("APB_SEQ_ITEM_LOGGER", $sformatf("Could not cast 't' (%s) to 't_mstr' (%s)", $typename(t), $typename(t_mstr)))
@@ -58,7 +58,7 @@ class uvma_apb_seq_item_logger_c extends uvml_logs_seq_item_logger_c#(
          else begin
             data = $sformatf("%h", t_mstr.rdata);
          end
-         fwrite($sformatf(" %t | %s | %h | %b | %b | %h |", $realtime(), access_type, t_mstr.address, t_mstr.slv_sel, t_mstr.slv_sel, data));
+         fwrite($sformatf(" %t | %s | %h | %b | %b | %s |", $realtime(), access_type, t_mstr.address, t_mstr.slv_sel, t_mstr.slv_sel, data));
       end
       else begin
          if (!$cast(t_slv, t)) begin
@@ -67,14 +67,14 @@ class uvma_apb_seq_item_logger_c extends uvml_logs_seq_item_logger_c#(
          data = $sformatf("%h", t_slv.rdata);
          fwrite($sformatf(" %t |    %b    | %h", $realtime(), t_slv.slverr, t_slv.rdata));
       end
-      
+
    endfunction : write
-   
+
    /**
     * Writes log header to disk.
     */
    virtual function void print_header();
-      
+
       if (cfg.drv_mode == UVMA_APB_MODE_MSTR) begin
          fwrite("-------------------------------------------------");
          fwrite("        TIME        |  ACC  | ADDRESS | SLV_SEL | DATA ");
@@ -85,9 +85,9 @@ class uvma_apb_seq_item_logger_c extends uvml_logs_seq_item_logger_c#(
          fwrite("        TIME        | SLV_ERR | RDATA ");
          fwrite("-------------------------------");
       end
-      
+
    endfunction : print_header
-   
+
 endclass : uvma_apb_seq_item_logger_c
 
 
