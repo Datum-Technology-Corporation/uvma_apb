@@ -58,7 +58,7 @@ class uvma_apb_seq_item_logger_c extends uvml_logs_seq_item_logger_c#(
          else begin
             data = $sformatf("%h", t_mstr.rdata);
          end
-         fwrite($sformatf(" %t | %s | %h | %b | %b | %s |", $realtime(), access_type, t_mstr.address, t_mstr.slv_sel, t_mstr.slv_sel, data));
+         fwrite($sformatf(" %t | %s | %h | %b | %s |", $realtime(), access_type, t_mstr.address, t_mstr.slv_sel, data));
       end
       else begin
          if (!$cast(t_slv, t)) begin
