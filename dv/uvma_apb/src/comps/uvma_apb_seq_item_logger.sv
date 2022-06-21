@@ -1,12 +1,5 @@
 // Copyright 2021 Datum Technology Corporation
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
-// Licensed under the Solderpad Hardware License v 2.1 (the "License"); you may not use this file except in compliance
-// with the License, or, at your option, the Apache License version 2.0.  You may obtain a copy of the License at
-//                                        https://solderpad.org/licenses/SHL-2.1/
-// Unless required by applicable law or agreed to in writing, any work distributed under the License is distributed on
-// an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
-// specific language governing permissions and limitations under the License.
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -49,8 +42,8 @@ class uvma_apb_seq_item_logger_c extends uvml_logs_seq_item_logger_c#(
             `uvm_fatal("APB_SEQ_ITEM_LOGGER", $sformatf("Could not cast 't' (%s) to 't_mstr' (%s)", $typename(t), $typename(t_mstr)))
          end
          case (t_mstr.access_type)
-            UVMA_APB_ACCESS_READ : access_type = "READ ";
-            UVMA_APB_ACCESS_WRITE: access_type = "WRITE";
+            UVMA_APB_ACCESS_READ : access_type = "READ  ";
+            UVMA_APB_ACCESS_WRITE: access_type = "WRITE ";
          endcase
          if (t_mstr.access_type == UVMA_APB_ACCESS_WRITE) begin
             data = $sformatf("%h", t_mstr.wdata);
@@ -58,7 +51,7 @@ class uvma_apb_seq_item_logger_c extends uvml_logs_seq_item_logger_c#(
          else begin
             data = $sformatf("%h", t_mstr.rdata);
          end
-         fwrite($sformatf(" %t | %s | %h | %b | %s |", $realtime(), access_type, t_mstr.address, t_mstr.slv_sel, data));
+         fwrite($sformatf(" %t |    %b    | %s | %h  | %s ", $realtime(), t_mstr.slv_sel, access_type, t_mstr.address, data));
       end
       else begin
          if (!$cast(t_slv, t)) begin
@@ -76,9 +69,9 @@ class uvma_apb_seq_item_logger_c extends uvml_logs_seq_item_logger_c#(
    virtual function void print_header();
 
       if (cfg.drv_mode == UVMA_APB_MODE_MSTR) begin
-         fwrite("-------------------------------------------------");
-         fwrite("        TIME        |  ACC  | ADDRESS | SLV_SEL | DATA ");
-         fwrite("-------------------------------------------------");
+         fwrite("--------------------------------------------------");
+         fwrite("        TIME        | SLV_SEL | ACCESS | ADDRESS  | DATA ");
+         fwrite("--------------------------------------------------");
       end
       else begin
          fwrite("-------------------------------");

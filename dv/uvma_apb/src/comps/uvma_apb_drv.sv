@@ -1,12 +1,5 @@
 // Copyright 2021 Datum Technology Corporation
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
-// Licensed under the Solderpad Hardware License v 2.1 (the "License"); you may not use this file except in compliance
-// with the License, or, at your option, the Apache License version 2.0.  You may obtain a copy of the License at
-//                                        https://solderpad.org/licenses/SHL-2.1/
-// Unless required by applicable law or agreed to in writing, any work distributed under the License is distributed on
-// an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
-// specific language governing permissions and limitations under the License.
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -187,8 +180,20 @@ endtask : drv_pre_reset
 task uvma_apb_drv_c::drv_in_reset();
 
    case (cfg.drv_mode)
-      UVMA_APB_MODE_MSTR: @(cntxt.vif.drv_mstr_cb); //@(mstr_mp.drv_mstr_cb);
-      UVMA_APB_MODE_SLV : @(cntxt.vif.drv_slv_cb ); //@(slv_mp .drv_slv_cb );
+      UVMA_APB_MODE_MSTR: begin
+         /*mstr_mp*/cntxt.vif.drv_mstr_cb.paddr   <= '0;
+         /*mstr_mp*/cntxt.vif.drv_mstr_cb.psel    <= '0;
+         /*mstr_mp*/cntxt.vif.drv_mstr_cb.penable <= '0;
+         /*mstr_mp*/cntxt.vif.drv_mstr_cb.pwrite  <= '0;
+         /*mstr_mp*/cntxt.vif.drv_mstr_cb.pwdata  <= '0;
+         @(cntxt.vif.drv_mstr_cb); //@(mstr_mp.drv_mstr_cb);
+      end
+      UVMA_APB_MODE_SLV: begin
+         /*slv_mp*/cntxt.vif.drv_slv_cb.pready  <= '0;
+         /*slv_mp*/cntxt.vif.drv_slv_cb.prdata  <= '0;
+         /*slv_mp*/cntxt.vif.drv_slv_cb.pslverr <= '0;
+         @(cntxt.vif.drv_slv_cb ); //@(slv_mp .drv_slv_cb );
+      end
 
       default: `uvm_fatal("APB_DRV", $sformatf("Invalid drv_mode: %0d", cfg.drv_mode))
    endcase
@@ -394,22 +399,18 @@ task uvma_apb_drv_c::drv_slv_idle();
 
       UVMA_APB_DRV_IDLE_ZEROS: begin
          /*slv_mp*/cntxt.vif.drv_slv_cb.prdata  <= '0;
-         /*slv_mp*/cntxt.vif.drv_slv_cb.pslverr <= 0;
       end
 
       UVMA_APB_DRV_IDLE_RANDOM: begin
          /*slv_mp*/cntxt.vif.drv_slv_cb.prdata  <= $urandom();
-         /*slv_mp*/cntxt.vif.drv_slv_cb.pslverr <= $urandom_range(0,1);
       end
 
       UVMA_APB_DRV_IDLE_X: begin
          /*slv_mp*/cntxt.vif.drv_slv_cb.prdata  <= 'X;
-         /*slv_mp*/cntxt.vif.drv_slv_cb.pslverr <= 'X;
       end
 
       UVMA_APB_DRV_IDLE_Z: begin
          /*slv_mp*/cntxt.vif.drv_slv_cb.prdata  <= 'Z;
-         /*slv_mp*/cntxt.vif.drv_slv_cb.pslverr <= 'Z;
       end
 
       default: `uvm_fatal("APB_DRV", $sformatf("Invalid drv_idle: %0d", cfg.drv_idle))
