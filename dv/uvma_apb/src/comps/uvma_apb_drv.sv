@@ -311,6 +311,8 @@ endtask : process_mstr_rsp
 
 task uvma_apb_drv_c::drv_mstr_read_req(uvma_apb_mstr_seq_item_c req);
 
+   bit  waited_for_rdy = 0;
+
    `uvm_info("APB_DRV", $sformatf("Driving read on MSTR for address %h. cfg.addr_bus_width=%0d, cfg.data_bus_width=%0d", req.address, cfg.addr_bus_width, cfg.data_bus_width), UVM_MEDIUM)
 
    @(cntxt.vif.drv_mstr_cb);
@@ -320,13 +322,14 @@ task uvma_apb_drv_c::drv_mstr_read_req(uvma_apb_mstr_seq_item_c req);
 
    @(cntxt.vif.drv_mstr_cb);
    cntxt.vif.drv_mstr_cb.penable = 1;
-   do begin
+   while (cntxt.vif./*drv_mstr_cb.*/pready !== 1'b1) begin
       @(cntxt.vif.drv_mstr_cb);
-   end while (cntxt.vif.drv_mstr_cb.pready !== 1'b1);
+      waited_for_rdy = 1;
+   end
    req.rdata = cntxt.vif.prdata;
    req.__has_error = cntxt.vif.pslverr;
 
-   @(cntxt.vif.drv_mstr_cb);
+   if (!waited_for_rdy) @(cntxt.vif.drv_mstr_cb);
    drv_mstr_idle();
    cntxt.vif.drv_mstr_cb.penable = 0;
    cntxt.vif.drv_mstr_cb.psel[0] = 0;
@@ -336,6 +339,8 @@ endtask : drv_mstr_read_req
 
 
 task uvma_apb_drv_c::drv_mstr_write_req(uvma_apb_mstr_seq_item_c req);
+
+   bit  waited_for_rdy = 0;
 
    `uvm_info("APB_DRV", $sformatf("Driving write on MSTR for address %h and data %h. cfg.addr_bus_width=%0d, cfg.data_bus_width=%0d", req.address, req.wdata, cfg.addr_bus_width, cfg.data_bus_width), UVM_MEDIUM)
 
@@ -347,12 +352,13 @@ task uvma_apb_drv_c::drv_mstr_write_req(uvma_apb_mstr_seq_item_c req);
 
    @(cntxt.vif.drv_mstr_cb);
    cntxt.vif.drv_mstr_cb.penable = 1;
-   do begin
+   while (cntxt.vif./*drv_mstr_cb.*/pready !== 1'b1) begin
       @(cntxt.vif.drv_mstr_cb);
-   end while (cntxt.vif.drv_mstr_cb.pready !== 1'b1);
+      waited_for_rdy = 1;
+   end
    req.__has_error = cntxt.vif.pslverr;
 
-   @(cntxt.vif.drv_mstr_cb);
+   if (!waited_for_rdy) @(cntxt.vif.drv_mstr_cb);
    drv_mstr_idle();
    cntxt.vif.drv_mstr_cb.penable = 0;
    cntxt.vif.drv_mstr_cb.psel[0] = 0;
@@ -362,6 +368,8 @@ endtask : drv_mstr_write_req
 
 
 task uvma_apb_drv_c::drv_mstr_idle();
+
+   /*mstr_mp*/cntxt.vif.drv_mstr_cb.pwrite <= '0;
 
    case (cfg.drv_idle)
       UVMA_APB_DRV_IDLE_SAME: ;// Do nothing;
