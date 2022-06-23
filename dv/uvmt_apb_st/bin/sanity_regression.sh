@@ -6,11 +6,11 @@
 
 
 # Launched from uvml project sim dir
-python3 ./setup_project.py
+./setup_project.py
 source ./setup_terminal.sh
-python3 ../tools/.imports/mio/src/__main__.py cpel uvmt_apb_st
-python3 ../tools/.imports/mio/src/__main__.py sim uvmt_apb_st -t reads -s 1 -c
-python3 ../tools/.imports/mio/src/__main__.py sim uvmt_apb_st -t writes -s 1 -c
-python3 ../tools/.imports/mio/src/__main__.py sim uvmt_apb_st -t all_access -s 1 -c
-python3 ../tools/.imports/mio/src/__main__.py results uvmt_apb_st results
-python3 ../tools/.imports/mio/src/__main__.py cov uvmt_apb_st
+../tools/.imports/mio/src/__main__.py cpel uvmt_apb_st
+../tools/.imports/mio/src/__main__.py sim uvmt_apb_st -t reads -s 1 -c
+../tools/.imports/mio/src/__main__.py sim uvmt_apb_st -t writes -s 1 -c
+../tools/.imports/mio/src/__main__.py sim uvmt_apb_st -t all_access -s 1 -c
+../tools/.imports/mio/src/__main__.py results uvmt_apb_st results
+../tools/.imports/mio/src/__main__.py cov uvmt_apb_st
