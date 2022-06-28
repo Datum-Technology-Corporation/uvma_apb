@@ -241,7 +241,7 @@ task uvma_apb_drv_c::get_next_req(ref uvma_apb_base_seq_item_c req);
 
    seq_item_port.get_next_item(req);
    `uvml_hrtbt()
-   `uvm_info("APB_DRV", $sformatf("Got new req:\n%s", req.sprint()), UVM_MEDIUM)
+   `uvm_info("APB_DRV", $sformatf("Got new req:\n%s", req.sprint()), UVM_HIGH)
 
    // Copy cfg fields
    req.mode           = cfg.drv_mode;
@@ -313,7 +313,7 @@ task uvma_apb_drv_c::drv_mstr_read_req(uvma_apb_mstr_seq_item_c req);
 
    bit  waited_for_rdy = 0;
 
-   `uvm_info("APB_DRV", $sformatf("Driving read on MSTR for address %h. cfg.addr_bus_width=%0d, cfg.data_bus_width=%0d", req.address, cfg.addr_bus_width, cfg.data_bus_width), UVM_MEDIUM)
+   `uvm_info("APB_DRV", $sformatf("Driving read on MSTR for address %h. cfg.addr_bus_width=%0d, cfg.data_bus_width=%0d", req.address, cfg.addr_bus_width, cfg.data_bus_width), UVM_HIGH)
 
    @(cntxt.vif.drv_mstr_cb);
    cntxt.vif.drv_mstr_cb.pwrite = 0;
@@ -342,7 +342,7 @@ task uvma_apb_drv_c::drv_mstr_write_req(uvma_apb_mstr_seq_item_c req);
 
    bit  waited_for_rdy = 0;
 
-   `uvm_info("APB_DRV", $sformatf("Driving write on MSTR for address %h and data %h. cfg.addr_bus_width=%0d, cfg.data_bus_width=%0d", req.address, req.wdata, cfg.addr_bus_width, cfg.data_bus_width), UVM_MEDIUM)
+   `uvm_info("APB_DRV", $sformatf("Driving write on MSTR for address %h and data %h. cfg.addr_bus_width=%0d, cfg.data_bus_width=%0d", req.address, req.wdata, cfg.addr_bus_width, cfg.data_bus_width), UVM_HIGH)
 
    @(cntxt.vif.drv_mstr_cb);
    cntxt.vif.drv_mstr_cb.pwrite  = 1;
