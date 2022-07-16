@@ -15,7 +15,7 @@ ip:
   block-diagram: ""
   languages: ["sv"]
   simulators-supported:
-    - { name: "vivado", version: "2021.1" }
+    - { name: "vivado", version: "2022.1" }
   tags: []
   copyright-holders: ["Datum Technology Corporation"]
   licenses: ["SHL-2.1"]
@@ -30,14 +30,15 @@ dependencies:
   - { name: "uvm"      , version:  "1.2" }
   - { name: "uvml"     , version: "~1.0" }
   - { name: "uvml_logs", version: "~1.0" }
+  - { name: "uvml_ral" , version: "~1.0" }
   
 hdl-src:
   directories: [".", "comps", "obj", "seq"]
   tests-name-template: ""
   flist:
-    metrics :  "src/uvma_apb_pkg.flist"      
-    riviera :  "src/uvma_apb_pkg.flist"      
-    questa  :  "src/uvma_apb_pkg.flist"      
-    vcs     :  "src/uvma_apb_pkg.flist"      
-    vivado  :  "src/uvma_apb_pkg.flist.xsim" 
-    xcelium :  "src/uvma_apb_pkg.flist"      
+    metrics :  "uvma_apb_pkg.flist"
+    riviera :  "uvma_apb_pkg.flist"
+    questa  :  "uvma_apb_pkg.flist"
+    vcs     :  "uvma_apb_pkg.flist"
+    vivado  :  "uvma_apb_pkg.flist.xsim"
+    xcelium :  "uvma_apb_pkg.flist"
